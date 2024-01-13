@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import LoginPanel from "./LoginPanel.vue"
-import { ref } from "vue"
 
 const switchLocalePath = useSwitchLocalePath()
 const route = useRoute()

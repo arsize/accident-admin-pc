@@ -15,6 +15,44 @@ useHead({
       <div class="container mx-auto pl-5">聯絡我們</div>
     </div>
     <div class="bottom-round-bar"></div>
+    <div
+      class="2xl:w-[800px] w-[800px] mx-auto mt-20 text-xl font-light tracking-widest"
+    >
+      <div>
+        如你需要尋求交通意外傷亡或工業傷亡相關的法律支援，可透過<span
+          class="text-custom-blue font-medium"
+          >電話，Whatapp及電郵</span
+        >等方式聯絡我們，亦可于網站內直接預約咨詢，當我方接受到你的預約訊息時，會立即聯絡你及確認預約詳情。
+      </div>
+      <div
+        class="text-custom-blue w-80 font-semibold bg-[#DFEDDA] flex justify-center items-center h-12 mt-20 mx-auto cursor-pointer rounded-full"
+      >
+        預約咨詢服務
+      </div>
+      <div class="flex w-[80%] mx-auto justify-between mt-28">
+        <div>
+          <div class="font-normal mb-5 pl-5">聯絡方式</div>
+          <div class="flex items-center text-lg mb-5">
+            <img class="w-[40px]" src="~/assets/images/image-11.png" alt="" />
+            <div>6775 5327</div>
+          </div>
+          <div class="flex items-center text-lg">
+            <img class="w-[40px]" src="~/assets/images/image-12.png" alt="" />
+            <div>tinbokhongkong@gmail.com</div>
+          </div>
+        </div>
+        <div>
+          <div class="font-normal mb-5">辦公室資料</div>
+          <div class="flex items-start text-lg">
+            <img class="w-[40px]" src="~/assets/images/image-13.png" alt="" />
+            <div>
+              <div>星期一至五</div>
+              <div>10:00 am - 6:00 pm</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 

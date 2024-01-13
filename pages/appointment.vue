@@ -15,6 +15,16 @@ useHead({
       <div class="container mx-auto pl-5">預約咨詢</div>
     </div>
     <div class="bottom-round-bar"></div>
+    <div
+      class="2xl:w-[800px] w-[800px] mx-auto mt-20 text-xl font-light tracking-widest flex justify-center"
+    >
+      歡迎你來預約咨詢，請先登入後或註冊後再進行預約
+    </div>
+    <div
+      class="w-[200px] bg-[#DFEDDA] rounded-xl h-10 flex justify-center items-center mx-auto mt-20 cursor-pointer"
+    >
+      登入/登記
+    </div>
   </div>
 </template>
 

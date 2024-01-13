@@ -1,7 +1,7 @@
 <script setup></script>
 
 <template>
-  <footer class="mt-40 mb-14 container mx-auto h-56 flex justify-between">
+  <footer class="mt-40 mb-14 container mx-auto h-60 flex justify-between">
     <div class="w-[70%] flex justify-between">
       <div class="flex flex-col justify-between">
         <NuxtLink to="/">
@@ -57,25 +57,35 @@
             src="~/assets/images/image-13.png"
             alt=""
           />
-          <div>星期一至五</div>
+          <div>
+            <div>星期一至五</div>
+            <div>10:00 am - 6:00 pm</div>
+          </div>
         </div>
       </div>
     </div>
     <div class="2xl:w-[20%] w-[25%] flex flex-col justify-between pt-5 pb-5">
       <div
-        class="cursor-pointer w-full font-semibold rounded-full h-10 bg-[#DFEDDA] text-custom-blue flex justify-center items-center"
+        class="cursor-pointer w-full font-semibold rounded-full 2xl:h-12 h-10 bg-[#DFEDDA] text-custom-blue flex justify-center items-center"
       >
         預約咨詢服務
       </div>
       <div>
-        <div class="text-xl text-custom-blue">想取得最新的法律资讯?</div>
+        <div class="text-xl text-custom-blue">想取得最新的法律咨詢?</div>
         <div>來訂閱我們的電子郵報</div>
       </div>
-      <input
-        class="border h-10 rounded-md pl-5"
-        type="text"
-        placeholder="輸入電郵訂閱我們"
-      />
+      <div class="relative w-[90%] h-10">
+        <input
+          class="w-full border h-full rounded-md pl-5"
+          type="text"
+          placeholder="輸入電郵訂閱我們"
+        />
+        <img
+          class="cursor-pointer absolute right-[5px] top-[50%] w-8 -translate-y-[50%]"
+          src="~/assets/images/message.png"
+          alt=""
+        />
+      </div>
     </div>
   </footer>
   <div class="w-full flex justify-center text-gray-400 mb-10 font-light">
