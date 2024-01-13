@@ -15,6 +15,7 @@ export default defineNuxtConfig({
     "nuxt-aos",
     "v-wave/nuxt",
   ],
+  ssr: true,
   vWave: {
     color: "#BDC9B9",
     easing: "ease-in",
@@ -37,11 +38,14 @@ export default defineNuxtConfig({
     },
   },
   i18n: {
-    locales: ["cn"],
+    locales: ["cn", "en"],
     defaultLocale: "cn",
     vueI18n: "./i18n.config.ts",
   },
   swiper: {
     modules: ["navigation", "pagination", "effect-creative"],
   },
+  plugins: [
+    // 在plugins中封装百度 谷歌 等统计脚本，可在次引入
+  ],
 })

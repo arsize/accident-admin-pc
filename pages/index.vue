@@ -15,7 +15,7 @@ const scrollToHash = () => {
 </script>
 
 <template>
-  <NuxtLayout id="layout-box" name="main-layout" :topNavBgColor="'#EEF8FE'">
+  <div>
     <div class="top-block 2xl:h-[900px] xl:h-[630px] lg:h-[630px] h-[500px]">
       <div class="text-box container mx-auto 2xl:pt-24 px-12 relative h-full">
         <div
@@ -24,7 +24,7 @@ const scrollToHash = () => {
           交通意外傷亡及
         </div>
         <div
-          class="wow animate_animated animate__fadeIn 2xl:text-6xl text-5xl text-custom-blue font-semibold font-NotoHk tracking-widest"
+          class="2xl:text-6xl text-5xl text-custom-blue font-semibold font-NotoHk tracking-widest"
         >
           工業傷亡支援中心
         </div>
@@ -135,28 +135,28 @@ const scrollToHash = () => {
         </SwiperSlide>
       </Swiper>
       <div class="flex justify-between h-24 items-center">
-        <Icon
-          class="cursor-pointer"
-          name="pepicons-pop:arrow-left-circle-filled"
-          size="36"
-        ></Icon>
+        <img
+          class="cursor-pointer w-[60px]"
+          src="~/assets/images/04.jpg"
+          alt=""
+        />
         <div class="flex">
           <div class="w-3 h-3 border rounded-full bg-black mr-5"></div>
           <div class="w-3 h-3 border rounded-full bg-gray-400 mr-5"></div>
           <div class="w-3 h-3 border rounded-full bg-gray-400 mr-5"></div>
           <div class="w-3 h-3 border rounded-full bg-gray-400"></div>
         </div>
-        <Icon
-          class="cursor-pointer"
-          name="pepicons-pop:arrow-right-circle-filled"
-          size="36"
-        ></Icon>
+        <img
+          class="cursor-pointer w-[60px]"
+          src="~/assets/images/03.jpg"
+          alt=""
+        />
       </div>
     </div>
-  </NuxtLayout>
+  </div>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .top-block {
   width: 100%;
   background-color: #eef8fe;

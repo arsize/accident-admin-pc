@@ -4,8 +4,11 @@
   <footer class="mt-40 mb-14 container mx-auto h-56 flex justify-between">
     <div class="w-[70%] flex justify-between">
       <div class="flex flex-col justify-between">
-        <img class="w-72" src="~/assets/images/image-05.png" alt="" />
-        <div class="flex">
+        <NuxtLink to="/">
+          <img class="w-72" src="~/assets/images/image-05.png" alt="" />
+        </NuxtLink>
+
+        <div class="flex ml-5">
           <img
             class="w-12 h-12 mr-5 cursor-pointer"
             src="~/assets/images/image-06.png"
@@ -24,11 +27,11 @@
         </div>
       </div>
       <div class="pt-5 flex flex-col justify-between pb-5 text-custom-blue">
-        <div class="cursor-pointer">服務範圍</div>
-        <div class="cursor-pointer">法律小知識</div>
-        <div class="cursor-pointer">關於中心</div>
-        <div class="cursor-pointer">聯絡我們</div>
-        <div class="cursor-pointer">隱私條款</div>
+        <NuxtLink to="/service" class="cursor-pointer">服務範圍</NuxtLink>
+        <NuxtLink to="/legal" class="cursor-pointer">法律小知識</NuxtLink>
+        <NuxtLink to="/about" class="cursor-pointer">關於中心</NuxtLink>
+        <NuxtLink to="/contact" class="cursor-pointer">聯絡我們</NuxtLink>
+        <NuxtLink to="/" class="cursor-pointer">隱私條款</NuxtLink>
       </div>
       <div class="pt-5 pb-5 flex flex-col justify-between">
         <div class="font-medium">聯絡資料</div>
