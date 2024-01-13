@@ -54,7 +54,7 @@ const bgColor = computed(() => {
           :style="
             route.path.includes('service') ? 'background-color: #e0ebdd' : ''
           "
-          class="cursor-pointer 2xl:py-3 2xl:px-8 py-2 px-5 rounded-full"
+          class="cursor-pointer 2xl:py-2 2xl:px-8 py-1.5 px-5 rounded-full"
           >{{ $t("ScopeOfService") }}</NuxtLink
         >
         <NuxtLink
@@ -62,7 +62,7 @@ const bgColor = computed(() => {
           :style="
             route.path.includes('legal') ? 'background-color: #f3efe6' : ''
           "
-          class="cursor-pointer 2xl:py-3 2xl:px-8 py-2 px-5 rounded-full"
+          class="cursor-pointer 2xl:py-2 2xl:px-8 py-1.5 px-5 rounded-full"
         >
           {{ $t("LegalKnowledge") }}
         </NuxtLink>
@@ -71,7 +71,7 @@ const bgColor = computed(() => {
           :style="
             route.path.includes('about') ? 'background-color: #EAEAEA' : ''
           "
-          class="cursor-pointer 2xl:py-3 2xl:px-8 py-2 px-5 rounded-full"
+          class="cursor-pointer 2xl:py-2 2xl:px-8 py-1.5 px-5 rounded-full"
           >{{ $t("AboutTheCenter") }}</NuxtLink
         >
         <NuxtLink
@@ -79,7 +79,7 @@ const bgColor = computed(() => {
           :style="
             route.path.includes('contact') ? 'background-color: #E2EBF1' : ''
           "
-          class="cursor-pointer 2xl:py-3 2xl:px-8 py-2 px-5 rounded-full"
+          class="cursor-pointer 2xl:py-2 2xl:px-8 py-1.5 px-5 rounded-full"
           >{{ $t("ContactUs") }}</NuxtLink
         >
         <NuxtLink
@@ -89,7 +89,7 @@ const bgColor = computed(() => {
               ? 'background-color: #E2EDF0'
               : ''
           "
-          class="cursor-pointer 2xl:py-3 2xl:px-8 py-2 px-5 rounded-full"
+          class="cursor-pointer 2xl:py-2 2xl:px-8 py-1.5 px-5 rounded-full"
           >{{ $t("AppointmentConsultation") }}</NuxtLink
         >
         <div @click="login" class="cursor-pointer">
