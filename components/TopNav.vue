@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import LoginPanel from "./LoginPanel.vue"
+const localePath = useLocalePath()
 
 const switchLocalePath = useSwitchLocalePath()
 const route = useRoute()
@@ -38,7 +39,7 @@ const bgColor = computed(() => {
     class="navbar h-28 px-10 box-border"
   >
     <div class="mx-auto container flex justify-between items-center py-6">
-      <NuxtLink to="/">
+      <NuxtLink :to="localePath('/')">
         <img
           class="2xl:max-w-80 lg:max-w-60 max-w-52"
           src="~/assets/images/logo.png"
@@ -49,7 +50,7 @@ const bgColor = computed(() => {
         class="flex text-custom-blue items-center w-[70%] justify-between 2xl:text-xl xl:text-lg text-base font-normal"
       >
         <NuxtLink
-          to="/service"
+          :to="localePath('/service')"
           :style="
             route.path.includes('service') ? 'background-color: #e0ebdd' : ''
           "
@@ -57,7 +58,7 @@ const bgColor = computed(() => {
           >{{ $t("ScopeOfService") }}</NuxtLink
         >
         <NuxtLink
-          to="/legal"
+          :to="localePath('/legal')"
           :style="
             route.path.includes('legal') ? 'background-color: #f3efe6' : ''
           "
@@ -66,7 +67,7 @@ const bgColor = computed(() => {
           {{ $t("LegalKnowledge") }}
         </NuxtLink>
         <NuxtLink
-          to="/about"
+          :to="localePath('/about')"
           :style="
             route.path.includes('about') ? 'background-color: #EAEAEA' : ''
           "
@@ -74,7 +75,7 @@ const bgColor = computed(() => {
           >{{ $t("AboutTheCenter") }}</NuxtLink
         >
         <NuxtLink
-          to="/contact"
+          :to="localePath('/contact')"
           :style="
             route.path.includes('contact') ? 'background-color: #E2EBF1' : ''
           "
@@ -82,7 +83,7 @@ const bgColor = computed(() => {
           >{{ $t("ContactUs") }}</NuxtLink
         >
         <NuxtLink
-          to="/appointment"
+          :to="localePath('/appointment')"
           :style="
             route.path.includes('appointment')
               ? 'background-color: #E2EDF0'
@@ -94,8 +95,8 @@ const bgColor = computed(() => {
         <div @click="login" class="cursor-pointer">
           {{ $t("LogInAndRegister") }}
         </div>
-
-        <!-- <div class="flex w-16 justify-between cursor-pointer ml-5">
+        <!-- 
+        <div class="flex w-16 justify-between cursor-pointer ml-5">
           <NuxtLink :to="switchLocalePath('cn')">中</NuxtLink>
           <div class="font-normal">|</div>
           <NuxtLink
