@@ -1,4 +1,11 @@
-<script setup></script>
+<script setup>
+useHead({
+  title: "预约咨询-交通意外伤亡及工业伤亡支援中心",
+  meta: [],
+  bodyAttrs: {},
+  script: [],
+})
+</script>
 
 <template>
   <div>

@@ -1,6 +1,13 @@
 <script setup lang="ts">
 import { ref } from "vue"
 
+useHead({
+  title: "交通意外伤亡及工业伤亡支援中心",
+  meta: [],
+  bodyAttrs: {},
+  script: [],
+})
+
 let currentShowTab = ref(0)
 
 const selectTab = (active: number) => {
