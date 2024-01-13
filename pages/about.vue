@@ -15,7 +15,7 @@ useHead({
       <div class="container mx-auto pl-5">關於中心</div>
     </div>
     <div class="bottom-round-bar"></div>
-    <div class="2xl:w-[1500px] mx-auto mt-20">
+    <div class="2xl:w-[1500px] w-[1000px] mx-auto mt-20">
       <div>
         服务范围简介 服务范围简介 服务范围简介 服务范围简介 服务范围简介
         服务范围简介 服务范围简介 服务范围简介 服务范围简介 服务范围简介

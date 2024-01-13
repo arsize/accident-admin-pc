@@ -1,8 +1,8 @@
 <script setup></script>
 
 <template>
-  <footer class="mt-40 mb-14 container mx-auto h-60 flex justify-between">
-    <div class="w-[70%] flex justify-between">
+  <footer class="mt-40 mb-14 container mx-auto h-56 flex justify-between">
+    <div class="w-[65%] flex justify-between">
       <div class="flex flex-col justify-between">
         <NuxtLink to="/">
           <img class="w-72" src="~/assets/images/image-05.png" alt="" />
