@@ -6,20 +6,23 @@ export default defineNuxtConfig({
   },
   css: ["~/assets/css/main.css", "~/assets/css/animation.css"],
   modules: [
-    "nuxt-icon",
     "@pinia/nuxt",
-    "@nuxtjs/tailwindcss",
     "@nuxtjs/i18n",
     "@nuxtjs/google-fonts",
     "nuxt-swiper",
     "nuxt-aos",
     "v-wave/nuxt",
+    "@nuxt/ui",
   ],
+  colorMode: {
+    preference: "light",
+  },
   ssr: true,
   vWave: {
-    color: "#BDC9B9",
+    color: "#000",
     easing: "ease-in",
-    initialOpcity: 0.1,
+    initialOpcity: 0.2,
+    finalOpacity: 0.1,
   },
   typescript: {
     typeCheck: false,
@@ -43,7 +46,7 @@ export default defineNuxtConfig({
     vueI18n: "./i18n.config.ts",
   },
   swiper: {
-    modules: ["navigation", "pagination", "effect-creative"],
+    modules: ["navigation", "pagination", "effect-creative", "autoplay"],
   },
   plugins: [
     // 在plugins中封装百度 谷歌 等统计脚本，可在次引入

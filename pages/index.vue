@@ -17,6 +17,12 @@ const scrollToHash = () => {
     behavior: "smooth",
   })
 }
+
+const slideSwiper = (type: string) => {
+  if (type === "next") {
+  } else {
+  }
+}
 </script>
 
 <template>
@@ -36,12 +42,12 @@ const scrollToHash = () => {
         <div class="pt-5 2xl:text-2xl text-xl text-gray-400">
           專門為意外受害人士提供法律咨詢服務
         </div>
-        <div
-          v-wave
+        <NuxtLink
+          to="/appointment"
           class="2xl:mt-20 mt-10 2xl:w-72 w-64 2xl:h-16 h-14 rounded-3xl bg-[#E0EEDA] flex justify-center items-center text-xl text-custom-blue font-bold tracking-widest cursor-pointer shadow-xl"
         >
           預約咨詢服務
-        </div>
+        </NuxtLink>
         <img
           class="w-96 2xl:w-1/3 xl:w-2/5 absolute top-20 right-0"
           src="~/assets/images/people.png"
@@ -119,7 +125,13 @@ const scrollToHash = () => {
     </div>
     <div class="container mx-auto mt-14">
       <Swiper
+        :modules="[SwiperAutoplay]"
         :spaceBetween="30"
+        :loop="true"
+        :autoplay="{
+          delay: 5000,
+          disableOnInteraction: true,
+        }"
         :pagination="{ clickable: true }"
         :slides-per-view="3"
       >
@@ -141,6 +153,7 @@ const scrollToHash = () => {
       </Swiper>
       <div class="flex justify-between h-24 items-center">
         <img
+          @click="slideSwiper('pre')"
           class="cursor-pointer w-[60px]"
           src="~/assets/images/04.jpg"
           alt=""
@@ -152,6 +165,7 @@ const scrollToHash = () => {
           <div class="w-3 h-3 border rounded-full bg-gray-400"></div>
         </div>
         <img
+          @click="slideSwiper('next')"
           class="cursor-pointer w-[60px]"
           src="~/assets/images/03.jpg"
           alt=""

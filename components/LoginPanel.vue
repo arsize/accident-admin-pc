@@ -3,24 +3,117 @@ const emit = defineEmits("update:showLoginPanel")
 const hideDialog = () => {
   emit("update:showLoginPanel", false)
 }
+
+const state = reactive({
+  email: undefined,
+  password: undefined,
+})
 </script>
 
 <template>
   <div
     style="z-index: 100"
-    class="absolute w-1/2 rounded-xl py-10 box-border bg-white top-[30%] left-[50%] translate-x-[-50%]"
+    class="absolute 2xl:w-2/5 w-[850px] rounded-xl box-border bg-white top-[15%] left-[50%] translate-x-[-50%]"
   >
-    <div class="flex">
-      <div class="w-1/2 border-r px-10 box-border">
-        <div>帳戶登入</div>
-        <div>
-          <input type="text" />
+    <UCard
+      :ui="{
+        ring: '',
+        divide: 'divide-y divide-gray-100 dark:divide-gray-800',
+      }"
+    >
+      <div class="flex box-border pt-2">
+        <div
+          class="w-1/2 box-border border-r flex flex-col justify-start items-center"
+        >
+          <div class="w-[75%]">
+            <div>帳戶登入</div>
+            <UForm :state="state" class="my-5 mb-10">
+              <UFormGroup name="email" class="mb-5">
+                <template #label>
+                  <div class="text-gray-500 font-normal mb-2">電話/電郵</div>
+                </template>
+                <UInput v-model="state.email" />
+              </UFormGroup>
+
+              <UFormGroup name="password">
+                <template #label>
+                  <div class="text-gray-500 font-normal mb-2">帳戶密碼</div>
+                </template>
+                <UInput v-model="state.password" type="password" />
+              </UFormGroup>
+
+              <div
+                class="w-[90%] bg-[#DEECDB] hover:bg-[#E5F4E2] rounded-full h-10 flex justify-center items-center text-custom-blue mt-10 cursor-pointer"
+              >
+                登入
+              </div>
+            </UForm>
+          </div>
+        </div>
+        <div class="w-1/2 box-border flex flex-col justify-start items-center">
+          <div class="w-[75%]">
+            <div>登記賬戶</div>
+            <UForm :state="state" class="my-5 mb-10">
+              <UFormGroup name="email" class="mb-5">
+                <template #label>
+                  <div class="text-gray-500 font-normal mb-2">你的姓稱</div>
+                </template>
+                <div class="flex justify-between">
+                  <UInput
+                    class="w-[49%]"
+                    v-model="state.email"
+                    placeholder="姓"
+                  />
+                  <UInput
+                    class="w-[49%]"
+                    v-model="state.email"
+                    placeholder="名"
+                  />
+                </div>
+              </UFormGroup>
+
+              <UFormGroup name="password" class="mb-5">
+                <template #label>
+                  <div class="text-gray-500 font-normal mb-2">聯絡電話</div>
+                </template>
+                <UInput v-model="state.password" type="password" />
+              </UFormGroup>
+              <UFormGroup name="password" class="mb-5">
+                <template #label>
+                  <div class="text-gray-500 font-normal mb-2">電郵地址</div>
+                </template>
+                <UInput v-model="state.password" type="password" />
+              </UFormGroup>
+              <UFormGroup name="password" class="mb-5">
+                <template #label>
+                  <div class="text-gray-500 font-normal mb-2">輸入密碼</div>
+                </template>
+                <UInput v-model="state.password" type="password" />
+              </UFormGroup>
+              <UFormGroup name="password">
+                <template #label>
+                  <div class="text-gray-500 font-normal mb-2">確認密碼</div>
+                </template>
+                <UInput v-model="state.password" type="password" />
+              </UFormGroup>
+
+              <div
+                class="w-[90%] bg-[#85C8EE] hover:bg-[#88CCF3] rounded-full h-10 flex justify-center items-center text-custom-blue mt-10 cursor-pointer"
+              >
+                登記
+              </div>
+            </UForm>
+          </div>
         </div>
       </div>
-      <div class="w-1/2 px-10 box-border">
-        <div>登記帳戶</div>
-      </div>
-    </div>
+      <UButton
+        color="gray"
+        variant="ghost"
+        icon="i-heroicons-x-mark-20-solid"
+        class="absolute top-3 right-3 cursor-pointer"
+        @click="hideDialog"
+      />
+    </UCard>
   </div>
   <div class="mask" @click="hideDialog"></div>
 </template>

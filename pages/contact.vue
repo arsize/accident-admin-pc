@@ -25,26 +25,40 @@ useHead({
         >等方式聯絡我們，亦可于網站內直接預約咨詢，當我方接受到你的預約訊息時，會立即聯絡你及確認預約詳情。
       </div>
       <div
-        class="text-custom-blue w-80 font-semibold bg-[#DFEDDA] flex justify-center items-center h-12 mt-20 mx-auto cursor-pointer rounded-full"
+        class="text-custom-blue w-80 font-semibold 2xl:text-xl text-base bg-[#DFEDDA] flex justify-center items-center h-12 mt-20 mx-auto cursor-pointer rounded-full"
       >
         預約咨詢服務
       </div>
-      <div class="flex w-[80%] mx-auto justify-between mt-28">
+      <div class="flex w-[80%] mx-auto justify-between 2xl:mt-28 mt-12">
         <div>
-          <div class="font-normal mb-5 pl-5">聯絡方式</div>
-          <div class="flex items-center text-lg mb-5">
-            <img class="w-[40px]" src="~/assets/images/image-11.png" alt="" />
+          <div class="font-normal mb-5 pl-5 2xl:text-lg text-base">
+            聯絡方式
+          </div>
+          <div class="flex items-center 2xl:text-lg text-base 2xl:mb-5 mb-2">
+            <img
+              class="2xl:w-[40px] w-[30px]"
+              src="~/assets/images/image-11.png"
+              alt=""
+            />
             <div>6775 5327</div>
           </div>
-          <div class="flex items-center text-lg">
-            <img class="w-[40px]" src="~/assets/images/image-12.png" alt="" />
+          <div class="flex items-center 2xl:text-lg text-base">
+            <img
+              class="2xl:w-[40px] w-[30px]"
+              src="~/assets/images/image-12.png"
+              alt=""
+            />
             <div>tinbokhongkong@gmail.com</div>
           </div>
         </div>
         <div>
-          <div class="font-normal mb-5">辦公室資料</div>
-          <div class="flex items-start text-lg">
-            <img class="w-[40px]" src="~/assets/images/image-13.png" alt="" />
+          <div class="font-normal mb-5 2xl:text-lg text-base">辦公室資料</div>
+          <div class="flex items-start 2xl:text-lg text-base">
+            <img
+              class="2xl:w-[40px] w-[30px]"
+              src="~/assets/images/image-13.png"
+              alt=""
+            />
             <div>
               <div>星期一至五</div>
               <div>10:00 am - 6:00 pm</div>

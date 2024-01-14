@@ -1,10 +1,20 @@
-<script setup>
+<script setup lang="ts">
+import LoginPanel from "@/components/LoginPanel.vue"
 useHead({
   title: "预约咨询-交通意外伤亡及工业伤亡支援中心",
   meta: [],
   bodyAttrs: {},
   script: [],
 })
+
+// 登入
+const showLoginPanel = ref(false)
+const login = () => {
+  showLoginPanel.value = true
+}
+const handleUpdate = (nmesg: boolean) => {
+  showLoginPanel.value = nmesg
+}
 </script>
 
 <template>
@@ -21,10 +31,12 @@ useHead({
       歡迎你來預約咨詢，請先登入後或註冊後再進行預約
     </div>
     <div
-      class="w-[200px] bg-[#DFEDDA] rounded-xl h-10 flex justify-center items-center mx-auto mt-20 cursor-pointer"
+      @click="login"
+      class="w-[200px] bg-[#DFEDDA] hover:bg-[#E5F4E2] rounded-xl h-10 flex justify-center items-center mx-auto 2xl:mt-20 mt-14 cursor-pointer"
     >
       登入/登記
     </div>
+    <LoginPanel v-if="showLoginPanel" @update:showLoginPanel="handleUpdate" />
   </div>
 </template>
 
