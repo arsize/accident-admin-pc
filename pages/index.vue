@@ -58,7 +58,7 @@ const slideSwiper = (type: string) => {
             class="w-44 h-12 flex justify-center items-center rounded-3xl absolute bottom-0 left-[50%] text-[#77AEEA] translate-x-[-50%] font-semibold bg-white cursor-pointer"
           >
             <img
-              class="w-[15px] absolute top-0 left-8"
+              class="wow animate_animated animate__fadeInDown w-[15px] absolute top-0 left-8"
               src="~/assets/images/row_down.jpg"
               alt=""
             />
