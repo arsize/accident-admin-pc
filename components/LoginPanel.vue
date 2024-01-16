@@ -1,5 +1,6 @@
-<script setup>
-const emit = defineEmits("update:showLoginPanel")
+<script setup lang="ts">
+import config from "~/utils/global"
+const emit = defineEmits(["update:showLoginPanel"])
 const hideDialog = () => {
   emit("update:showLoginPanel", false)
 }
@@ -8,12 +9,35 @@ const state = reactive({
   email: undefined,
   password: undefined,
 })
+
+const register = async () => {
+  console.log("register")
+  const res = await useFetch(`${config.APIURL}/sys/user/register`, {
+    method: "POST",
+    body: {
+      surname: "理员",
+      firstName: "管",
+      email: "1234567@qq.com",
+      mobile: "13471254466",
+      password: "123456",
+    },
+  })
+}
+const login = async () => {
+  const res = await useFetch(`${config.APIURL}/sys/auth/account/login`, {
+    method: "POST",
+    body: {
+      account: "13471254466",
+      password: "123456",
+    },
+  })
+}
 </script>
 
 <template>
   <div
     style="z-index: 100"
-    class="absolute 2xl:w-2/5 w-[850px] rounded-xl box-border bg-white top-[15%] left-[50%] translate-x-[-50%]"
+    class="absolute 2xl:w-2/5 w-[850px] rounded-xl box-border bg-white 2xl:top-[15%] top-[11%] left-[50%] translate-x-[-50%]"
   >
     <UCard
       :ui="{
@@ -43,6 +67,7 @@ const state = reactive({
               </UFormGroup>
 
               <div
+                @click="login"
                 class="w-[90%] bg-[#DEECDB] hover:bg-[#E5F4E2] rounded-full h-10 flex justify-center items-center text-custom-blue mt-10 cursor-pointer"
               >
                 登入
@@ -98,6 +123,7 @@ const state = reactive({
               </UFormGroup>
 
               <div
+                @click="register"
                 class="w-[90%] bg-[#85C8EE] hover:bg-[#88CCF3] rounded-full h-10 flex justify-center items-center text-custom-blue mt-10 cursor-pointer"
               >
                 登記
