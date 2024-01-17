@@ -13,6 +13,7 @@ export default defineNuxtConfig({
     "nuxt-aos",
     "v-wave/nuxt",
     "@nuxt/ui",
+    "@pinia-plugin-persistedstate/nuxt",
   ],
   colorMode: {
     preference: "light",

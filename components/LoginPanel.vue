@@ -1,17 +1,76 @@
 <script setup lang="ts">
+import type { FormError, FormSubmitEvent } from "#ui/types"
+import type { LoginRes } from "@/types/index"
+import { useStore } from "~/store"
 import config from "~/utils/global"
+const store = useStore()
+
 const emit = defineEmits(["update:showLoginPanel"])
 const hideDialog = () => {
   emit("update:showLoginPanel", false)
 }
 
-const state = reactive({
+// 登入
+const loginState = reactive({
   email: undefined,
   password: undefined,
 })
+const validateLogin = (state: any): FormError[] => {
+  const errors = []
+  if (!state.email) errors.push({ path: "email", message: "請輸入電話/電郵" })
+  if (!state.password) {
+    errors.push({ path: "password", message: "請輸入密碼" })
+  }
+  return errors
+}
+const onLogin = async () => {
+  const { data } = await useFetch<LoginRes>(
+    `${config.APIURL}/sys/auth/account/login`,
+    {
+      method: "POST",
+      body: {
+        account: loginState.email,
+        password: loginState.password,
+      },
+    }
+  )
+  if (data.value?.code !== 200) {
+    alert(data.value?.msg)
+  } else {
+  }
 
-const register = async () => {
-  console.log("register")
+  store.token = "1234"
+}
+
+// 注册
+const registerState = reactive({
+  firstName: undefined,
+  surname: undefined,
+  mobile: undefined,
+  email: undefined,
+  password: undefined,
+  confirmPassword: undefined,
+})
+const validateRegister = (state: any): FormError[] => {
+  const errors = []
+  if (!state.email) {
+    errors.push({ path: "email", message: "請輸入電郵地址" })
+  }
+  if (!state.mobile) {
+    errors.push({ path: "mobile", message: "請輸入聯絡電話" })
+  }
+  if (!state.password) {
+    errors.push({ path: "password", message: "請輸入密碼" })
+  }
+  if (!state.confirmPassword) {
+    errors.push({ path: "confirmPassword", message: "請確認密碼" })
+  }
+  if (state.confirmPassword !== state.password) {
+    errors.push({ path: "confirmPassword", message: "两次密碼不一致" })
+  }
+  return errors
+}
+const onRegister = async () => {
   const res = await useFetch(`${config.APIURL}/sys/user/register`, {
     method: "POST",
     body: {
@@ -19,15 +78,6 @@ const register = async () => {
       firstName: "管",
       email: "1234567@qq.com",
       mobile: "13471254466",
-      password: "123456",
-    },
-  })
-}
-const login = async () => {
-  const res = await useFetch(`${config.APIURL}/sys/auth/account/login`, {
-    method: "POST",
-    body: {
-      account: "13471254466",
       password: "123456",
     },
   })
@@ -51,83 +101,132 @@ const login = async () => {
         >
           <div class="w-[75%]">
             <div>帳戶登入</div>
-            <UForm :state="state" class="my-5 mb-10">
-              <UFormGroup name="email" class="mb-5">
+            <UForm
+              :validate="validateLogin"
+              @submit="onLogin"
+              :state="loginState"
+              class="my-5 mb-5"
+            >
+              <UFormGroup name="email" class="2xl:mb-5 mb-3" required>
                 <template #label>
-                  <div class="text-gray-500 font-normal mb-2">電話/電郵</div>
+                  <div class="text-gray-500 font-normal mb-2 inline-block">
+                    電話/電郵
+                  </div>
                 </template>
-                <UInput v-model="state.email" />
+                <UInput
+                  placeholder="請輸入電話/電郵"
+                  v-model="loginState.email"
+                />
               </UFormGroup>
 
-              <UFormGroup name="password">
+              <UFormGroup name="password" required>
                 <template #label>
-                  <div class="text-gray-500 font-normal mb-2">帳戶密碼</div>
+                  <div class="text-gray-500 font-normal mb-2 inline-block">
+                    帳戶密碼
+                  </div>
                 </template>
-                <UInput v-model="state.password" type="password" />
+                <UInput
+                  placeholder="請輸入賬戶密碼"
+                  v-model="loginState.password"
+                  type="password"
+                />
               </UFormGroup>
 
-              <div
-                @click="login"
+              <UButton
+                type="submit"
                 class="w-[90%] bg-[#DEECDB] hover:bg-[#E5F4E2] rounded-full h-10 flex justify-center items-center text-custom-blue mt-10 cursor-pointer"
               >
                 登入
-              </div>
+              </UButton>
             </UForm>
           </div>
         </div>
         <div class="w-1/2 box-border flex flex-col justify-start items-center">
           <div class="w-[75%]">
             <div>登記賬戶</div>
-            <UForm :state="state" class="my-5 mb-10">
-              <UFormGroup name="email" class="mb-5">
+            <UForm
+              @submit="onRegister"
+              :validate="validateRegister"
+              :state="registerState"
+              class="my-5 2xl:mb-10 mb-5"
+            >
+              <UFormGroup>
                 <template #label>
-                  <div class="text-gray-500 font-normal mb-2">你的姓稱</div>
+                  <div class="text-gray-500 font-normal mb-2 inline-block">
+                    你的姓稱
+                  </div>
                 </template>
-                <div class="flex justify-between">
-                  <UInput
-                    class="w-[49%]"
-                    v-model="state.email"
-                    placeholder="姓"
-                  />
-                  <UInput
-                    class="w-[49%]"
-                    v-model="state.email"
-                    placeholder="名"
-                  />
+                <div class="flex items-center justify-between w-[100%]">
+                  <UFormGroup name="firstName" class="mb-3 w-[49%]">
+                    <UInput
+                      class="w-[100%]"
+                      v-model="registerState.firstName"
+                      placeholder="姓"
+                    />
+                  </UFormGroup>
+                  <UFormGroup name="surname" class="mb-3 w-[49%]">
+                    <UInput
+                      class="w-[100%]"
+                      v-model="registerState.surname"
+                      placeholder="名"
+                    />
+                  </UFormGroup>
                 </div>
               </UFormGroup>
 
-              <UFormGroup name="password" class="mb-5">
+              <UFormGroup name="mobile" class="2xl:mb-5 mb-3" required>
                 <template #label>
-                  <div class="text-gray-500 font-normal mb-2">聯絡電話</div>
+                  <div class="text-gray-500 font-normal mb-2 inline-block">
+                    聯絡電話
+                  </div>
                 </template>
-                <UInput v-model="state.password" type="password" />
+                <UInput
+                  v-model="registerState.mobile"
+                  placeholder="請輸入聯絡電話"
+                />
               </UFormGroup>
-              <UFormGroup name="password" class="mb-5">
+              <UFormGroup name="email" class="2xl:mb-5 mb-3" required>
                 <template #label>
-                  <div class="text-gray-500 font-normal mb-2">電郵地址</div>
+                  <div class="text-gray-500 font-normal mb-2 inline-block">
+                    電郵地址
+                  </div>
                 </template>
-                <UInput v-model="state.password" type="password" />
+                <UInput
+                  v-model="registerState.email"
+                  placeholder="請輸入電郵地址"
+                />
               </UFormGroup>
-              <UFormGroup name="password" class="mb-5">
+              <UFormGroup name="password" class="2xl:mb-5 mb-3" required>
                 <template #label>
-                  <div class="text-gray-500 font-normal mb-2">輸入密碼</div>
+                  <div class="text-gray-500 font-normal mb-2 inline-block">
+                    輸入密碼
+                  </div>
                 </template>
-                <UInput v-model="state.password" type="password" />
+                <UInput
+                  v-model="registerState.password"
+                  placeholder="請輸入密碼"
+                  type="password"
+                />
               </UFormGroup>
-              <UFormGroup name="password">
+              <UFormGroup name="confirmPassword" required>
                 <template #label>
-                  <div class="text-gray-500 font-normal mb-2">確認密碼</div>
+                  <div class="text-gray-500 font-normal mb-2 inline-block">
+                    確認密碼
+                  </div>
                 </template>
-                <UInput v-model="state.password" type="password" />
+                <UInput
+                  v-model="registerState.confirmPassword"
+                  placeholder="請確認密碼"
+                  type="password"
+                />
               </UFormGroup>
 
-              <div
-                @click="register"
-                class="w-[90%] bg-[#85C8EE] hover:bg-[#88CCF3] rounded-full h-10 flex justify-center items-center text-custom-blue mt-10 cursor-pointer"
+              <UButton
+                type="submit"
+                class="w-[90%] bg-[#85C8EE] hover:bg-[#88CCF3] rounded-full h-10 flex justify-center items-center text-custom-blue 2xl:mt-10 mt-5 cursor-pointer"
               >
                 登記
-              </div>
+              </UButton>
             </UForm>
           </div>
         </div>
