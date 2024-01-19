@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import type { CustomRes, SlideItem } from "@/types"
+import config from "~/utils/global"
+
 useHead({
   title: "交通意外伤亡及工业伤亡支援中心",
   meta: [],
@@ -6,10 +9,23 @@ useHead({
   script: [],
 })
 
-let currentShowTab = ref(0)
+const currentShowTab = ref("")
+const currentShowList = ref<SlideItem[]>([])
+// 法律小知识
+const ledgeObj = ref()
+const getLegalKnowledge = () => {
+  const { data } = useFetch<CustomRes>(`${config.APIURL}/sys/blog/recommend`)
+  if (data.value?.code === 0) {
+    ledgeObj.value = data.value.data ?? {}
+    if (ledgeObj.value && Object.keys(ledgeObj.value).length > 0) {
+      selectTab(Object.keys(ledgeObj.value)[0])
+    }
+  }
+}
 
-const selectTab = (active: number) => {
+const selectTab = (active: string) => {
   currentShowTab.value = active
+  currentShowList.value = ledgeObj.value[currentShowTab.value]
 }
 const scrollToHash = () => {
   document.getElementById("layout-box")?.scrollTo({
@@ -23,6 +39,8 @@ const slideSwiper = (type: string) => {
   } else {
   }
 }
+
+getLegalKnowledge()
 </script>
 
 <template>
@@ -69,57 +87,55 @@ const slideSwiper = (type: string) => {
     </div>
     <div class="bottom-round-bar"></div>
     <div
-      class="text-custom-blue 2xl:text-4xl text-3xl font-semibold font-NotoHk tracking-widest h-60 flex justify-center items-center"
+      class="text-custom-blue 2xl:text-4xl text-3xl font-semibold font-NotoHk tracking-widest 2xl:h-60 h-52 flex justify-center items-center"
     >
       服務範圍
     </div>
     <div class="flex justify-between container mx-auto">
-      <div class="w-[48%] 2xl:h-80 h-64 border border-slate-300 rounded-xl p-6">
+      <NuxtLink
+        to="/service"
+        class="w-[48%] h-80 sm:h-[350px] border border-slate-300 rounded-xl p-6 cursor-pointer"
+      >
         <div class="flex items-center">
           <img class="w-20 h-20 mr-5" src="~/assets/images/car.png" alt="" />
           <div class="text-xl">交通意外傷亡支援</div>
         </div>
-        <div class="mt-5 text-gray-500">
-          服務范圍簡介服務范圍簡介服務范圍簡介服務范圍簡介服務范圍簡介服務范圍簡介服務范圍簡介服務范圍簡介服務范圍簡介服務范圍簡介服務范圍簡介服務范圍簡介服務范圍簡介服務范圍簡介服務范圍簡介服務范圍簡介
+        <div class="mt-5 text-gray-500 font-normal">
+          專為交通意外傷者及其家人提供法律支援服務，以幫助他們瞭解自己在交通意外中的法律權益，以及應該如何處理此類意外的注意事項和步驟。
+          <div class="mt-1">
+            此外，我們還提供一些小貼士和建議，以幫助受傷者更好地應對交通意外並保障自己的權益。另一方面，我們還提供關於政府的交通意外賠付計劃的介紹，讓傷者可從多方面了解自己可能可以獲得的援助。此外，我們還提供專業分析和建議，以幫助受傷者選擇合適的解決方案。
+          </div>
         </div>
-      </div>
-      <div class="w-[48%] 2xl:h-80 h-64 border border-slate-300 rounded-xl p-6">
+      </NuxtLink>
+
+      <NuxtLink
+        to="/service"
+        class="w-[48%] h-80 sm:h-[350px] border border-slate-300 rounded-xl p-6 cursor-pointer"
+      >
         <div class="flex items-center">
           <img class="w-20 h-20 mr-5" src="~/assets/images/hat.png" alt="" />
           <div class="text-xl">工業傷亡支援</div>
         </div>
-        <div class="mt-5 text-gray-500">
-          服務范圍簡介服務范圍簡介服務范圍簡介服務范圍簡介服務范圍簡介服務范圍簡介服務范圍簡介服務范圍簡介服務范圍簡介服務范圍簡介服務范圍簡介服務范圍簡介服務范圍簡介服務范圍簡介服務范圍簡介服務范圍簡介
+        <div class="mt-5 text-gray-500 font-normal">
+          專為工傷意外傷者及家人提供相關的法律權益、法律程序以及應該注意的事項和一些小貼士。另外，我們也提供了法律援助署的簡介，
+          以及作出專業分析協助工傷受害者尋找合適的法律專業人士並提供支援。
         </div>
-      </div>
+      </NuxtLink>
     </div>
     <div
-      class="text-custom-blue 2xl:text-4xl text-3xl font-semibold font-NotoHk tracking-widest h-60 flex justify-center items-center"
+      class="text-custom-blue 2xl:text-4xl text-3xl font-semibold font-NotoHk tracking-widest 2xl:h-60 h-52 flex justify-center items-center"
     >
       法律小知識
     </div>
     <div class="flex container mx-auto">
-      <div class="flex mx-auto">
+      <div v-if="ledgeObj" class="flex mx-auto">
         <div
-          @click="selectTab(0)"
-          :class="{ active: currentShowTab === 0 }"
+          v-for="(item, index) in Object.keys(ledgeObj)"
+          @click="selectTab(item)"
+          :class="{ active: currentShowTab === item }"
           class="tab"
         >
-          交通意外
-        </div>
-        <div
-          @click="selectTab(1)"
-          :class="{ active: currentShowTab === 1 }"
-          class="tab mx-10"
-        >
-          工業傷亡
-        </div>
-        <div
-          @click="selectTab(2)"
-          :class="{ active: currentShowTab === 2 }"
-          class="tab"
-        >
-          客户案件分享
+          {{ item }}
         </div>
       </div>
     </div>
@@ -135,23 +151,20 @@ const slideSwiper = (type: string) => {
         :pagination="{ clickable: true }"
         :slides-per-view="3"
       >
-        <SwiperSlide class="shadow-md" v-for="slide in 10" :key="slide">
-          <div
-            class="doc-box w-[100%] xl:h-[500px] h-[450px] border rounded-lg overflow-hidden"
-          >
-            <div
-              class="img-top xl:h-2/3 h-3/5 bg-[url('~/assets/images/01.png')] bg-no-repeat bg-center bg-cover"
-            ></div>
+        <SwiperSlide class="shadow-md" v-for="slide in currentShowList">
+          <div class="doc-box w-[100%] border rounded-lg overflow-hidden">
+            <img :src="slide.pictureUrl" alt="" />
             <div class="sub-text p-5">
-              <div class="text-2xl font-bold mb-5">文章标题</div>
-              {{
-                slide
-              }}内容简介内容简介内容简介内容简介内容简介内容简介内容简介内容简介内容简介内容简介内容简介内容简介内容简介内容简介
+              <div class="text-lg font-bold mb-5">{{ slide.title }}</div>
+              <div class="textOVerThree" v-html="slide.content"></div>
             </div>
           </div>
         </SwiperSlide>
       </Swiper>
-      <div class="flex justify-between h-24 items-center">
+      <div
+        v-if="currentShowList.length > 3"
+        class="flex justify-between h-24 items-center"
+      >
         <img
           @click="slideSwiper('pre')"
           class="cursor-pointer w-[60px]"
@@ -209,6 +222,10 @@ const slideSwiper = (type: string) => {
   justify-content: center;
   align-items: center;
   cursor: pointer;
+  margin-right: 30px;
+  &:last-child {
+    margin-right: 0;
+  }
 }
 
 .active {
@@ -216,5 +233,21 @@ const slideSwiper = (type: string) => {
 }
 .doc-box {
   border-radius: 10px;
+}
+
+.textOVerThree {
+  display: -webkit-box;
+
+  overflow: hidden;
+
+  white-space: normal !important;
+
+  text-overflow: ellipsis;
+
+  word-wrap: break-word;
+
+  -webkit-line-clamp: 3;
+
+  -webkit-box-orient: vertical;
 }
 </style>

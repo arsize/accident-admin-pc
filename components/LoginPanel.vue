@@ -1,9 +1,13 @@
 <script setup lang="ts">
 import type { FormError, FormSubmitEvent } from "#ui/types"
-import type { LoginRes } from "@/types/index"
+import type { CustomRes, LoginInfo, UserInfo } from "@/types/index"
+import type { MsgEnum } from "@/app.vue"
 import { useStore } from "~/store"
 import config from "~/utils/global"
 const store = useStore()
+import { inject } from "vue"
+
+const msg = inject<(text?: string, type?: MsgEnum) => void>("message")
 
 const emit = defineEmits(["update:showLoginPanel"])
 const hideDialog = () => {
@@ -24,7 +28,7 @@ const validateLogin = (state: any): FormError[] => {
   return errors
 }
 const onLogin = async () => {
-  const { data } = await useFetch<LoginRes>(
+  const { data } = await useFetch<CustomRes>(
     `${config.APIURL}/sys/auth/account/login`,
     {
       method: "POST",
@@ -34,12 +38,30 @@ const onLogin = async () => {
       },
     }
   )
-  if (data.value?.code !== 200) {
-    alert(data.value?.msg)
+  if (data.value?.code !== 0) {
+    if (msg) msg(data.value?.msg, "warning")
   } else {
-  }
+    store.token = data.value?.data?.access_token ?? ""
 
-  store.token = "1234"
+    const _usfo = await useFetch<CustomRes>(`${config.APIURL}/sys/user/info`, {
+      method: "get",
+      onRequest({ request, options }) {
+        const headers = options?.headers
+          ? new Headers(options.headers)
+          : new Headers()
+        if (!headers.has("Authorization")) {
+          headers.set("Authorization", store.token)
+        }
+        options.headers = headers
+      },
+    })
+    if (_usfo.data.value?.code !== 0) {
+      if (msg) msg(_usfo.data.value?.msg, "warning")
+    } else {
+      store.userInfo = _usfo.data.value.data ?? null
+      hideDialog()
+    }
+  }
 }
 
 // 注册
@@ -71,23 +93,33 @@ const validateRegister = (state: any): FormError[] => {
   return errors
 }
 const onRegister = async () => {
-  const res = await useFetch(`${config.APIURL}/sys/user/register`, {
-    method: "POST",
-    body: {
-      surname: "理员",
-      firstName: "管",
-      email: "1234567@qq.com",
-      mobile: "13471254466",
-      password: "123456",
-    },
-  })
+  const { data } = await useFetch<CustomRes>(
+    `${config.APIURL}/sys/user/register`,
+    {
+      method: "POST",
+      body: {
+        surname: registerState.surname,
+        firstName: registerState.firstName,
+        email: registerState.email,
+        mobile: registerState.mobile,
+        password: registerState.password,
+      },
+    }
+  )
+  console.log("data.value?.code", data.value?.code)
+  if (data.value?.code !== 0) {
+    if (msg) msg(data.value?.msg, "warning")
+  } else {
+    if (msg) msg(data.value?.msg, "success")
+    hideDialog()
+  }
 }
 </script>
 
 <template>
   <div
-    style="z-index: 100"
-    class="absolute 2xl:w-2/5 w-[850px] rounded-xl box-border bg-white 2xl:top-[15%] top-[11%] left-[50%] translate-x-[-50%]"
+    style="z-index: 40"
+    class="absolute 2xl:w-2/5 w-[850px] rounded-xl box-border bg-white 2xl:top-[15%] top-[15%] left-[50%] translate-x-[-50%]"
   >
     <UCard
       :ui="{
@@ -150,29 +182,25 @@ const onRegister = async () => {
               :state="registerState"
               class="my-5 2xl:mb-10 mb-5"
             >
-              <UFormGroup>
-                <template #label>
-                  <div class="text-gray-500 font-normal mb-2 inline-block">
-                    你的姓稱
-                  </div>
-                </template>
-                <div class="flex items-center justify-between w-[100%]">
-                  <UFormGroup name="firstName" class="mb-3 w-[49%]">
-                    <UInput
-                      class="w-[100%]"
-                      v-model="registerState.firstName"
-                      placeholder="姓"
-                    />
-                  </UFormGroup>
-                  <UFormGroup name="surname" class="mb-3 w-[49%]">
-                    <UInput
-                      class="w-[100%]"
-                      v-model="registerState.surname"
-                      placeholder="名"
-                    />
-                  </UFormGroup>
-                </div>
-              </UFormGroup>
+              <div class="text-gray-500 font-normal mb-2 inline-block text-sm">
+                你的姓稱
+              </div>
+              <div class="flex justify-between items-center w-[100%] mb-3">
+                <UFormGroup name="firstName" class="w-[49%]" required>
+                  <UInput
+                    class="w-[100%]"
+                    v-model="registerState.firstName"
+                    placeholder="姓"
+                  />
+                </UFormGroup>
+                <UFormGroup class="w-[49%]" name="surname">
+                  <UInput
+                    class="w-[100%]"
+                    v-model="registerState.surname"
+                    placeholder="名"
+                  />
+                </UFormGroup>
+              </div>
 
               <UFormGroup name="mobile" class="2xl:mb-5 mb-3" required>
                 <template #label>
@@ -240,6 +268,7 @@ const onRegister = async () => {
       />
     </UCard>
   </div>
+
   <div class="mask" @click="hideDialog"></div>
 </template>
 
@@ -251,6 +280,6 @@ const onRegister = async () => {
   left: 0;
   right: 0;
   background-color: rgba($color: #000000, $alpha: 0.2);
-  z-index: 50;
+  z-index: 30;
 }
 </style>

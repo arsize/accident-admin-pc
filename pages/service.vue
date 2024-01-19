@@ -1,4 +1,13 @@
-<script setup>
+<script setup lang="ts">
+import config from "~/utils/global"
+import { useStore } from "~/store"
+import type { MsgEnum } from "@/app.vue"
+import type { CustomRes } from "@/types"
+
+const msg = inject<(text?: string, type?: MsgEnum) => void>("message")
+
+const store = useStore()
+
 useHead({
   title: "服务范围-交通意外伤亡及工业伤亡支援中心",
   meta: [],
@@ -6,9 +15,46 @@ useHead({
   script: [],
 })
 const selectedTab = ref(0)
-const changeTab = (index) => {
+const changeTab = (index: number) => {
   selectedTab.value = index
 }
+const scrollToTop = () => {
+  document.getElementById("layout-box")?.scrollTo({
+    top: 0,
+    behavior: "smooth",
+  })
+}
+
+// 获取服务列表
+const serviceList = ref([])
+const getServiceList = async () => {
+  const { data } = await useFetch<CustomRes>(
+    `${config.APIURL}/sys/service_type_info/list`,
+    {
+      method: "get",
+      onRequest({ request, options }) {
+        const headers = options?.headers
+          ? new Headers(options.headers)
+          : new Headers()
+        if (!headers.has("Authorization")) {
+          headers.set("Authorization", store.token)
+        }
+        options.headers = headers
+      },
+    }
+  )
+  if (data.value?.code === 0) {
+  } else {
+    if (msg) msg(data.value?.msg, "warning")
+  }
+  console.log(data.value)
+}
+
+getServiceList()
+
+onMounted(() => {
+  scrollToTop()
+})
 </script>
 
 <template>

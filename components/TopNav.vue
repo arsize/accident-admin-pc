@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import LoginPanel from "./LoginPanel.vue"
+import { useStore } from "~/store"
 const localePath = useLocalePath()
 
 const switchLocalePath = useSwitchLocalePath()
 const route = useRoute()
+const store = useStore()
 
 // 登入
 const showLoginPanel = ref(false)
@@ -92,7 +94,10 @@ const bgColor = computed(() => {
           class="cursor-pointer 2xl:py-2 2xl:px-8 py-1.5 px-5 rounded-full"
           >{{ $t("AppointmentConsultation") }}</NuxtLink
         >
-        <div @click="login" class="cursor-pointer">
+        <div v-if="store.token" class="cursor-pointer">
+          {{ `你好,${store.userInfo?.firstName}先生` }}
+        </div>
+        <div @click="login" v-else>
           {{ $t("LogInAndRegister") }}
         </div>
         <!-- 
