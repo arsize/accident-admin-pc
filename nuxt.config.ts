@@ -40,12 +40,6 @@ export default defineNuxtConfig({
         changeOrigin: true,
       },
     },
-    // 该配置用于服务端请求转发
-    routeRules: {
-      "/server/**": {
-        proxy: "http://121.43.49.249:8080",
-      },
-    },
   },
 
   postcss: {
