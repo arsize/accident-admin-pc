@@ -16,7 +16,7 @@ const getLegalKnowledge = async () => {
   const res = await $fetch<CustomRes>(`/sys/blog/recommend`, {
     baseURL: runtimeConfig.public.apiBase,
   })
-  console.log("拿到了数据", res)
+  console.log("拿到了数据2", res)
   if (res.code === 0) {
     ledgeObj.value = res.data ?? {}
     if (ledgeObj.value && Object.keys(ledgeObj.value).length > 0) {
