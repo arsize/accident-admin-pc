@@ -7,6 +7,8 @@ import config from "~/utils/global"
 const store = useStore()
 import { inject } from "vue"
 
+const runtimeConfig = useRuntimeConfig()
+
 const msg = inject<(text?: string, type?: MsgEnum) => void>("message")
 
 const emit = defineEmits(["update:showLoginPanel"])
@@ -28,22 +30,21 @@ const validateLogin = (state: any): FormError[] => {
   return errors
 }
 const onLogin = async () => {
-  const { data } = await useFetch<CustomRes>(
-    `${config.PROXY}/sys/auth/account/login`,
-    {
-      method: "POST",
-      body: {
-        account: loginState.email,
-        password: loginState.password,
-      },
-    }
-  )
+  const { data } = await useFetch<CustomRes>(`/sys/auth/account/login`, {
+    baseURL: runtimeConfig.public.apiBase,
+    method: "POST",
+    body: {
+      account: loginState.email,
+      password: loginState.password,
+    },
+  })
   if (data.value?.code !== 0) {
     if (msg) msg(data.value?.msg, "warning")
   } else {
     store.token = data.value?.data?.access_token ?? ""
 
-    const _usfo = await useFetch<CustomRes>(`${config.PROXY}/sys/user/info`, {
+    const _usfo = await useFetch<CustomRes>(`/sys/user/info`, {
+      baseURL: runtimeConfig.public.apiBase,
       method: "get",
       onRequest({ request, options }) {
         const headers = options?.headers
@@ -93,19 +94,17 @@ const validateRegister = (state: any): FormError[] => {
   return errors
 }
 const onRegister = async () => {
-  const { data } = await useFetch<CustomRes>(
-    `${config.PROXY}/sys/user/register`,
-    {
-      method: "POST",
-      body: {
-        surname: registerState.surname,
-        firstName: registerState.firstName,
-        email: registerState.email,
-        mobile: registerState.mobile,
-        password: registerState.password,
-      },
-    }
-  )
+  const { data } = await useFetch<CustomRes>(`/sys/user/register`, {
+    baseURL: runtimeConfig.public.apiBase,
+    method: "POST",
+    body: {
+      surname: registerState.surname,
+      firstName: registerState.firstName,
+      email: registerState.email,
+      mobile: registerState.mobile,
+      password: registerState.password,
+    },
+  })
   console.log("data.value?.code", data.value?.code)
   if (data.value?.code !== 0) {
     if (msg) msg(data.value?.msg, "warning")

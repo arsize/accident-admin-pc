@@ -8,15 +8,13 @@ useHead({
   script: [],
 })
 const runtimeConfig = useRuntimeConfig()
-const currentShowTab = ref("")
-const currentShowList = ref<SlideItem[]>([])
+
 // 法律小知识
 const ledgeObj = ref()
 const getLegalKnowledge = async () => {
   const res = await $fetch<CustomRes>(`/sys/blog/recommend`, {
     baseURL: runtimeConfig.public.apiBase,
   })
-  console.log("拿到了数据2", res)
   if (res.code === 0) {
     ledgeObj.value = res.data ?? {}
     if (ledgeObj.value && Object.keys(ledgeObj.value).length > 0) {
@@ -25,6 +23,8 @@ const getLegalKnowledge = async () => {
   }
 }
 
+const currentShowTab = ref("")
+const currentShowList = ref<SlideItem[]>([])
 const selectTab = (active: string) => {
   currentShowTab.value = active
   currentShowList.value = ledgeObj.value[currentShowTab.value]

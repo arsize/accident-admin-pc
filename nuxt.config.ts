@@ -4,7 +4,11 @@ export default defineNuxtConfig({
   app: {
     pageTransition: { name: "page", mode: "out-in" },
   },
-  css: ["~/assets/css/main.css", "~/assets/css/animation.css"],
+  css: [
+    "~/assets/css/main.css",
+    "~/assets/css/animation.css",
+    "@vuepic/vue-datepicker/dist/main.css",
+  ],
   modules: [
     "@pinia/nuxt",
     "@nuxtjs/i18n",
@@ -17,6 +21,9 @@ export default defineNuxtConfig({
   ],
   colorMode: {
     preference: "light",
+  },
+  build: {
+    transpile: ["@vuepic/vue-datepicker"],
   },
   ssr: true,
   vWave: {
@@ -43,6 +50,9 @@ export default defineNuxtConfig({
     routeRules: {
       "/server/**": {
         proxy: "http://121.43.49.249:8080/**",
+      },
+      "/appointment": {
+        ssr: false,
       },
     },
   },

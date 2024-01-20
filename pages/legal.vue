@@ -1,9 +1,36 @@
 <script setup lang="ts">
+import type { CustomRes, SlideItem } from "@/types"
+const runtimeConfig = useRuntimeConfig()
+
 useHead({
   title: "法律小知识-交通意外伤亡及工业伤亡支援中心",
   meta: [],
   bodyAttrs: {},
   script: [],
+})
+
+// 法律小知识
+const ledgeObj = ref()
+const getLegalKnowledge = async () => {
+  const res = await $fetch<CustomRes>(`/sys/blog/recommend`, {
+    baseURL: runtimeConfig.public.apiBase,
+  })
+  if (res.code === 0) {
+    ledgeObj.value = res.data ?? {}
+    if (ledgeObj.value && Object.keys(ledgeObj.value).length > 0) {
+      selectTab(Object.keys(ledgeObj.value)[0])
+    }
+  }
+}
+const currentShowTab = ref("")
+const currentShowList = ref<SlideItem[]>([])
+const selectTab = (active: string) => {
+  currentShowTab.value = active
+  currentShowList.value = ledgeObj.value[currentShowTab.value]
+}
+
+onMounted(() => {
+  getLegalKnowledge()
 })
 </script>
 
@@ -15,6 +42,32 @@ useHead({
       <div class="container mx-auto pl-5">法律小知識</div>
     </div>
     <div class="bottom-round-bar"></div>
+
+    <div class="flex container mx-auto h-60 items-center">
+      <div v-if="ledgeObj" class="flex mx-auto">
+        <div
+          v-for="(item, index) in Object.keys(ledgeObj)"
+          @click="selectTab(item)"
+          :class="{ active: currentShowTab === item }"
+          class="tab mr-20"
+        >
+          {{ item }}
+        </div>
+      </div>
+    </div>
+    <div class="flex flex-wrap container mx-auto justify-between">
+      <div class="w-[31%] flex" v-for="slide in currentShowList">
+        <div
+          class="doc-box shadow-md w-[100%] border rounded-2xl overflow-hidden"
+        >
+          <img class="w-full" :src="slide.pictureUrl" alt="" />
+          <div class="sub-text p-5">
+            <div class="text-lg font-bold mb-5">{{ slide.title }}</div>
+            <div class="textOVerThree" v-html="slide.content"></div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -36,5 +89,35 @@ useHead({
     border-radius: 0 0 50% 50%;
     background-color: #fffcf2;
   }
+}
+.tab {
+  width: 130px;
+  height: 40px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  &:last-child {
+    margin-right: 0;
+  }
+}
+.active {
+  background-color: #fcb04c;
+}
+.textOVerThree {
+  display: -webkit-box;
+
+  overflow: hidden;
+
+  white-space: normal !important;
+
+  text-overflow: ellipsis;
+
+  word-wrap: break-word;
+
+  -webkit-line-clamp: 3;
+
+  -webkit-box-orient: vertical;
 }
 </style>

@@ -2,10 +2,10 @@
 import config from "~/utils/global"
 import { useStore } from "~/store"
 import type { MsgEnum } from "@/app.vue"
-import type { CustomRes } from "@/types"
+import type { CustomRes, ServiceType, RelevantLaws, ContentMd } from "@/types"
 
 const msg = inject<(text?: string, type?: MsgEnum) => void>("message")
-
+const runtimeConfig = useRuntimeConfig()
 const store = useStore()
 
 useHead({
@@ -14,9 +14,11 @@ useHead({
   bodyAttrs: {},
   script: [],
 })
-const selectedTab = ref(0)
-const changeTab = (index: number) => {
-  selectedTab.value = index
+const selectedTab = ref(2)
+const changeTab = (index: number | undefined) => {
+  selectedTab.value = index ?? -1
+  getRecomList()
+  getContentMd()
 }
 const scrollToTop = () => {
   document.getElementById("layout-box")?.scrollTo({
@@ -26,34 +28,51 @@ const scrollToTop = () => {
 }
 
 // 获取服务列表
-const serviceList = ref([])
-const getServiceList = async () => {
-  const { data } = await useFetch<CustomRes>(
-    `${config.PROXY}/sys/service_type_info/list`,
+const serviceList = ref<ServiceType[]>([
+  {
+    id: 2,
+    name: "交通意外傷亡支援",
+  },
+  {
+    id: 3,
+    name: "工業傷亡支援",
+  },
+])
+
+// 相关法律知识
+const someList = ref<RelevantLaws[]>([])
+const getRecomList = async () => {
+  const res = await $fetch<CustomRes>(
+    `/sys/blog/relatedKnowledge/${selectedTab.value}`,
     {
+      baseURL: runtimeConfig.public.apiBase,
       method: "get",
-      onRequest({ request, options }) {
-        const headers = options?.headers
-          ? new Headers(options.headers)
-          : new Headers()
-        if (!headers.has("Authorization")) {
-          headers.set("Authorization", store.token)
-        }
-        options.headers = headers
-      },
     }
   )
-  if (data.value?.code === 0) {
-  } else {
-    if (msg) msg(data.value?.msg, "warning")
+  if (res.code === 0) {
+    someList.value = res.data ?? []
   }
-  console.log(data.value)
 }
 
-getServiceList()
+// 查询服务内容
+const contentMd = ref<ContentMd>({})
+const getContentMd = async () => {
+  const res = await $fetch<CustomRes>(
+    `/sys/blog/serviceScope/${selectedTab.value}`,
+    {
+      baseURL: runtimeConfig.public.apiBase,
+      method: "get",
+    }
+  )
+  if (res.code === 0) {
+    contentMd.value = res.data ?? {}
+  }
+}
 
 onMounted(() => {
   scrollToTop()
+  changeTab(2)
+  getRecomList()
 })
 </script>
 
@@ -69,34 +88,52 @@ onMounted(() => {
       class="flex justify-between article container mx-auto py-20 px-5 box-border"
     >
       <div class="w-[15%] min-w-[220px]">
-        <div class="w-full min-h-[200px]">
+        <div class="w-full min-h-[200px] mb-10">
           <div
-            @click="changeTab(0)"
-            :class="{ activedTab: selectedTab === 0 }"
-            class="w-full cursor-pointer h-12 tracking-widest flex justify-start pl-8 items-center rounded-lg"
+            v-for="(item, index) in serviceList"
+            @click="changeTab(item.id)"
+            :class="{ activedTab: selectedTab === item.id }"
+            class="w-full cursor-pointer h-12 mb-5 tracking-widest flex justify-start pl-8 items-center rounded-lg"
           >
-            交通意外伤亡支援
-          </div>
-          <div
-            @click="changeTab(1)"
-            :class="{ activedTab: selectedTab === 1 }"
-            class="w-full cursor-pointer h-12 flex tracking-widest justify-start pl-8 items-center rounded-lg"
-          >
-            工业伤亡支援
+            {{ item.name }}
           </div>
         </div>
         <div class="w-full pl-5">
           <div class="text-xl mb-10 text-custom-blue">相關法律知识</div>
-          <div class="atc-item w-full" v-for="item in 5">
-            <div class="w-full border h-40"></div>
+          <div class="atc-item w-full mb-5" v-for="(item, index) in someList">
+            <div class="w-full border rounded-md h-30 relative cursor-pointer">
+              <img class="w-full h-full" :src="item.pictureUrl" alt="" />
+              <div
+                class="label absolute top-0 right-0 w-2/5 h-6 bg-[#DFEDDA] flex justify-center items-center rounded-md text-xs"
+              >
+                <div v-if="item.legalKnowledgeType === 2">交通意外</div>
+                <div v-if="item.legalKnowledgeType === 3">工業傷亡</div>
+              </div>
+            </div>
             <div class="p-2 box-border font-light">
-              文章标题文章标题文章标题文章标
+              {{ item.title }}
             </div>
           </div>
         </div>
       </div>
-      <div class="w-[50%]">markdown富文本</div>
-      <div class="w-[20%]">内容概况</div>
+      <div class="w-[50%]">
+        <div v-if="contentMd" v-html="contentMd.content"></div>
+        <div
+          v-if="contentMd?.extendedArticles"
+          class="w-full bg-[#F7F7F7] p-3 mt-20 pl-5"
+        >
+          <div class="mb-5">延伸文章</div>
+          <ul class="list-disc pl-5">
+            <li
+              class="mb-3 cursor-pointer"
+              v-for="item in contentMd.extendedArticles"
+            >
+              <div style="color: #fa8216">{{ item.title }}</div>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="w-[20%]" v-html="contentMd.summary"></div>
     </div>
   </div>
 </template>

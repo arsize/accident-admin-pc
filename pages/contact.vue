@@ -24,11 +24,12 @@ useHead({
           >電話，Whatapp及電郵</span
         >等方式聯絡我們，亦可于網站內直接預約咨詢，當我方接受到你的預約訊息時，會立即聯絡你及確認預約詳情。
       </div>
-      <div
+      <NuxtLink
+        to="/appointment"
         class="text-custom-blue w-80 font-semibold 2xl:text-xl text-base bg-[#DFEDDA] flex justify-center items-center h-12 mt-20 mx-auto cursor-pointer rounded-full"
       >
         預約咨詢服務
-      </div>
+      </NuxtLink>
       <div class="flex w-[80%] mx-auto justify-between 2xl:mt-28 mt-12">
         <div>
           <div class="font-normal mb-5 pl-5 2xl:text-lg text-base">

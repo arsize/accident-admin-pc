@@ -1,7 +1,7 @@
 export interface CustomRes {
   code: number
   msg?: string
-  data?: LoginInfo & UserInfo
+  data?: LoginInfo & UserInfo & ServiceType[] & RelevantLaws[] & ContentMd
 }
 
 export interface LoginInfo {
@@ -31,5 +31,29 @@ export interface SlideItem {
   id: number
   legalKnowledgeType?: number
   pictureUrl?: string
+  title?: string
+}
+
+export interface ServiceType {
+  id?: number
+  name?: string
+  value?: number
+}
+
+export interface RelevantLaws {
+  id: number
+  legalKnowledgeType: number
+  pictureUrl: string
+  title: string
+}
+
+export interface ContentMd {
+  content?: string
+  summary?: string
+  extendedArticles?: extendedArticlesList[]
+}
+
+export interface extendedArticlesList {
+  id?: number
   title?: string
 }
