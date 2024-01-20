@@ -40,6 +40,11 @@ export default defineNuxtConfig({
         changeOrigin: true,
       },
     },
+    routeRules: {
+      "/server/**": {
+        proxy: "http://121.43.49.249:8080/**",
+      },
+    },
   },
 
   postcss: {
