@@ -1,9 +1,20 @@
-<script setup>
+<script setup lang="ts">
 useHead({
   title: "联系我们-交通意外伤亡及工业伤亡支援中心",
   meta: [],
   bodyAttrs: {},
   script: [],
+})
+
+const scrollToTop = () => {
+  document.getElementById("layout-box")?.scrollTo({
+    top: 0,
+    behavior: "smooth",
+  })
+}
+
+onMounted(() => {
+  scrollToTop()
 })
 </script>
 

@@ -17,6 +17,19 @@ export default {
       },
       colors: {
         "custom-blue": "#262262",
+        defaultb: {
+          50: "#85C8EE",
+          100: "#85C8EE",
+          200: "#85C8EE",
+          300: "#85C8EE",
+          400: "#85C8EE",
+          500: "#85C8EE",
+          600: "#85C8EE",
+          700: "#85C8EE",
+          800: "#85C8EE",
+          900: "#85C8EE",
+          950: "#85C8EE",
+        },
       },
       animation: {
         bounce: "bounce 1s ease-in-out",

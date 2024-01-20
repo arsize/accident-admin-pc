@@ -12,7 +12,7 @@ const runtimeConfig = useRuntimeConfig()
 // 法律小知识
 const ledgeObj = ref()
 const getLegalKnowledge = async () => {
-  const res = await $fetch<CustomRes>(`/sys/blog/recommend`, {
+  const res = await $fetch<CustomRes>(`/sys/blog/knowledge`, {
     baseURL: runtimeConfig.public.apiBase,
   })
   if (res.code === 0) {
@@ -95,7 +95,7 @@ getLegalKnowledge()
     </div>
     <div class="flex justify-between container mx-auto">
       <NuxtLink
-        to="/service"
+        :to="{ path: '/service', query: { type: 2 } }"
         class="w-[48%] h-80 sm:h-[350px] border border-slate-300 rounded-xl p-6 cursor-pointer"
       >
         <div class="flex items-center">
@@ -111,7 +111,7 @@ getLegalKnowledge()
       </NuxtLink>
 
       <NuxtLink
-        to="/service"
+        :to="{ path: '/service', query: { type: 3 } }"
         class="w-[48%] h-80 sm:h-[350px] border border-slate-300 rounded-xl p-6 cursor-pointer"
       >
         <div class="flex items-center">

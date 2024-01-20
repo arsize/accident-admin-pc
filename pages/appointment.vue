@@ -2,12 +2,16 @@
 import type { FormError, FormSubmitEvent } from "#ui/types"
 import LoginPanel from "@/components/LoginPanel.vue"
 import { useStore } from "~/store"
-import type { CustomRes, ServiceType } from "@/types"
+import type { CustomRes, ServiceType, DateTimes } from "@/types"
+import type { MsgEnum } from "@/app.vue"
+import { getMonth, addMonths } from "date-fns"
 
 const store = useStore()
 import VueDatePicker from "@vuepic/vue-datepicker"
 import "@vuepic/vue-datepicker/dist/main.css"
 const runtimeConfig = useRuntimeConfig()
+const msg = inject<(text?: string, type?: MsgEnum) => void>("message")
+
 useHead({
   title: "预约咨询-交通意外伤亡及工业伤亡支援中心",
   meta: [],
@@ -15,16 +19,20 @@ useHead({
   script: [],
 })
 
-const state = reactive({
+const state = reactive<{
+  consultTimeStart?: DateTimes | string
+  [key: string]: any
+}>({
   surname: undefined,
   firstName: undefined,
   email: undefined,
   telephone: undefined,
   serviceTypeId: undefined,
-  serviceTypeName: undefined,
+  serviceTypeName: "",
   caseDate: undefined,
   consultDate: undefined,
-  consultTime: undefined,
+  consultTimeStart: undefined,
+  consultTimeEnd: undefined,
   describeInfo: undefined,
 })
 
@@ -39,8 +47,96 @@ const handleUpdate = (nmesg: boolean) => {
 
 // 预约
 async function onSubmit(event: FormSubmitEvent<any>) {
-  console.log(event.data)
+  if (!state.firstName) {
+    if (msg) msg("请填写姓", "warning")
+    return
+  }
+  if (!state.surname) {
+    if (msg) msg("请填写名", "warning")
+    return
+  }
+  if (!state.email) {
+    if (msg) msg("请填写電郵地址", "warning")
+    return
+  }
+  if (!state.telephone) {
+    if (msg) msg("请填写聯絡電話", "warning")
+    return
+  }
+  if (!state.serviceTypeId) {
+    if (msg) msg("请選擇咨詢類型", "warning")
+    return
+  }
+  if (!state.consultDate) {
+    if (msg) msg("请選擇咨詢日期", "warning")
+    return
+  }
+  if (!state.consultTimeStart) {
+    if (msg) msg("请選擇咨詢日期开始时间", "warning")
+    return
+  }
+  if (!state.consultTimeEnd) {
+    if (msg) msg("请選擇咨詢日期结束时间", "warning")
+    return
+  }
+
+  // 咨询类型
+  state.serviceTypeId = parseInt(state.serviceTypeId)
+  serviceTypeOptions.value.map((k) => {
+    if (k.id === state.serviceTypeId) {
+      state.serviceTypeName = k.name ?? ""
+    }
+  })
+  function isDateTimes(time: DateTimes | string): time is DateTimes {
+    return (<DateTimes>time).hours !== undefined
+  }
+  // 处理时间
+  if (isDateTimes(state.consultTimeStart)) {
+    state.consultTimeStart = `${(<DateTimes>state.consultTimeStart).hours}:${
+      state.consultTimeStart.minutes
+    }:${state.consultTimeStart.seconds}`
+  }
+  if (isDateTimes(state.consultTimeEnd)) {
+    state.consultTimeEnd = `${(<DateTimes>state.consultTimeEnd).hours}:${
+      state.consultTimeEnd.minutes
+    }:${state.consultTimeEnd.seconds}`
+  }
+
+  // 日期时间
+  state.consultDate = state.consultTimeStart + " - " + state.consultTimeEnd
+  console.log("state", state)
+  state.caseDate = `${
+    state.caseDate.getMonth() + 1
+  }/${state.caseDate.getDate()}/${state.caseDate.getFullYear()}`
+  console.log(state.caseDate)
+  delete state.consultTimeStart
+  delete state.consultTimeEnd
+  const stateRes = await useFetch<CustomRes>(`/sys/appointment_record_info`, {
+    baseURL: runtimeConfig.public.apiBase,
+    method: "post",
+    onRequest({ request, options }) {
+      const headers = options?.headers
+        ? new Headers(options.headers)
+        : new Headers()
+      if (!headers.has("Authorization")) {
+        headers.set("Authorization", store.token)
+      }
+      options.headers = headers
+    },
+    body: state.value,
+  })
+  // console.log("stateRes", stateRes)
 }
+
+// 选择日期
+// 100天内
+const allowedDates = computed(() => {
+  let allowD = [new Date()]
+  for (let i = 1; i < 100; i++) {
+    allowD.push(new Date(new Date().setDate(new Date().getDate() + i)))
+  }
+  return allowD
+})
 
 // 咨询类型
 const serviceTypeOptions = ref<ServiceType[]>([])
@@ -54,10 +150,19 @@ const getServiceOptions = async () => {
     serviceTypeOptions.value.map((k) => {
       k.value = k.id
     })
+    console.log("serviceTypeOptions", serviceTypeOptions.value)
   }
 }
 
+const scrollToTop = () => {
+  document.getElementById("layout-box")?.scrollTo({
+    top: 0,
+    behavior: "smooth",
+  })
+}
+
 onMounted(() => {
+  scrollToTop()
   getServiceOptions()
 })
 </script>
@@ -96,11 +201,12 @@ onMounted(() => {
             >管理預約申請&nbsp;</span
           >查看過往的紀錄。
         </div>
-        <div
+        <NuxtLink
+          to="/manageAppoint"
           class="bg-[#85C8EE] text-custom-blue w-[90%] mt-20 cursor-pointer font-bold h-[40px] flex justify-center items-center rounded-full"
         >
           管理預約申請
-        </div>
+        </NuxtLink>
       </div>
       <div class="right p-8 w-[55%] pt-10 box-border border rounded-2xl">
         <div class="font-bold">預約諮詢服務</div>
@@ -144,22 +250,37 @@ onMounted(() => {
                       size="lg"
                       v-model="state.serviceTypeId"
                       :options="serviceTypeOptions"
+                      option-attribute="name"
                     />
                   </UFormGroup>
                 </div>
                 <div class="mt-3">
-                  <UFormGroup label="咨詢時間" name="caseDate" required>
+                  <UFormGroup label="咨詢時間" name="consultDate" required>
                     <VueDatePicker
-                      v-model="state.caseDate"
+                      v-model="state.consultDate"
                       placeholder="選擇日期"
+                      :allowed-dates="allowedDates"
+                      :enable-time-picker="false"
+                      locale="cn"
+                      cancel-text="close"
+                      select-text="select"
+                      disable-year-select
                     ></VueDatePicker>
                   </UFormGroup>
                 </div>
-                <div class="mt-3">
-                  <UFormGroup name="caseDate">
+                <div class="mt-3 flex justify-between">
+                  <UFormGroup class="w-[49%]" name="consultTimeStart">
                     <VueDatePicker
-                      v-model="state.caseDate"
-                      placeholder="選擇時段"
+                      time-picker
+                      v-model="state.consultTimeStart"
+                      placeholder="開始時間"
+                    ></VueDatePicker>
+                  </UFormGroup>
+                  <UFormGroup class="w-[49%]" name="consultTimeEnd">
+                    <VueDatePicker
+                      time-picker
+                      v-model="state.consultTimeEnd"
+                      placeholder="結束時間"
                     ></VueDatePicker>
                   </UFormGroup>
                 </div>
@@ -178,6 +299,9 @@ onMounted(() => {
                     <VueDatePicker
                       v-model="state.caseDate"
                       placeholder="選擇日期"
+                      :enable-time-picker="false"
+                      locale="cn"
+                      disable-year-select
                     ></VueDatePicker>
                   </UFormGroup>
                 </div>
@@ -189,11 +313,12 @@ onMounted(() => {
               </div>
             </div>
             <div class="w-full flex justify-end">
-              <div
+              <button
+                type="submit"
                 class="bg-[#DEECDB] w-40 py-2 rounded-full text-md font-semibold flex justify-center items-center cursor-pointer"
               >
                 确定预约
-              </div>
+              </button>
             </div>
           </UForm>
         </div>

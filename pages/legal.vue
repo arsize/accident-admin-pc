@@ -2,6 +2,8 @@
 import type { CustomRes, SlideItem } from "@/types"
 const runtimeConfig = useRuntimeConfig()
 
+const type = ref("waterfall")
+
 useHead({
   title: "法律小知识-交通意外伤亡及工业伤亡支援中心",
   meta: [],
@@ -12,7 +14,7 @@ useHead({
 // 法律小知识
 const ledgeObj = ref()
 const getLegalKnowledge = async () => {
-  const res = await $fetch<CustomRes>(`/sys/blog/recommend`, {
+  const res = await $fetch<CustomRes>(`/sys/blog/knowledge`, {
     baseURL: runtimeConfig.public.apiBase,
   })
   if (res.code === 0) {
@@ -29,8 +31,21 @@ const selectTab = (active: string) => {
   currentShowList.value = ledgeObj.value[currentShowTab.value]
 }
 
+const scrollToTop = () => {
+  document.getElementById("layout-box")?.scrollTo({
+    top: 0,
+    behavior: "smooth",
+  })
+}
+
+// 显示详情
+const showDetail = () => {
+  type.value = "detail"
+}
+
 onMounted(() => {
   getLegalKnowledge()
+  scrollToTop()
 })
 </script>
 
@@ -43,31 +58,38 @@ onMounted(() => {
     </div>
     <div class="bottom-round-bar"></div>
 
-    <div class="flex container mx-auto h-60 items-center">
-      <div v-if="ledgeObj" class="flex mx-auto">
-        <div
-          v-for="(item, index) in Object.keys(ledgeObj)"
-          @click="selectTab(item)"
-          :class="{ active: currentShowTab === item }"
-          class="tab mr-20"
-        >
-          {{ item }}
+    <div v-if="type === 'waterfall'">
+      <div class="flex container mx-auto h-48 items-center">
+        <div v-if="ledgeObj" class="flex mx-auto">
+          <div
+            v-for="(item, index) in Object.keys(ledgeObj)"
+            @click="selectTab(item)"
+            :class="{ active: currentShowTab === item }"
+            class="tab mr-20"
+          >
+            {{ item }}
+          </div>
         </div>
       </div>
-    </div>
-    <div class="flex flex-wrap container mx-auto justify-between">
-      <div class="w-[31%] flex" v-for="slide in currentShowList">
+      <div class="flex flex-wrap container mx-auto justify-between">
         <div
-          class="doc-box shadow-md w-[100%] border rounded-2xl overflow-hidden"
+          @click="showDetail"
+          class="w-[31%] flex cursor-pointer"
+          v-for="slide in currentShowList"
         >
-          <img class="w-full" :src="slide.pictureUrl" alt="" />
-          <div class="sub-text p-5">
-            <div class="text-lg font-bold mb-5">{{ slide.title }}</div>
-            <div class="textOVerThree" v-html="slide.content"></div>
+          <div
+            class="doc-box shadow-md mb-10 w-[100%] border rounded-2xl overflow-hidden"
+          >
+            <img class="w-full" :src="slide.pictureUrl" alt="" />
+            <div class="sub-text p-5">
+              <div class="text-lg font-bold mb-5">{{ slide.title }}</div>
+              <div class="textOVerThree" v-html="slide.content"></div>
+            </div>
           </div>
         </div>
       </div>
     </div>
+    <div v-else></div>
   </div>
 </template>
 

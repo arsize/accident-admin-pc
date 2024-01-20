@@ -20,7 +20,7 @@ const open = (msg: string, type: MsgEnum): void => {
   if (store.msgId === null) {
     store.msgId = setTimeout(() => {
       close()
-    }, 3000)
+    }, 2000)
   }
 }
 

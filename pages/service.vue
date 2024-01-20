@@ -7,6 +7,7 @@ import type { CustomRes, ServiceType, RelevantLaws, ContentMd } from "@/types"
 const msg = inject<(text?: string, type?: MsgEnum) => void>("message")
 const runtimeConfig = useRuntimeConfig()
 const store = useStore()
+const route = useRoute()
 
 useHead({
   title: "服务范围-交通意外伤亡及工业伤亡支援中心",
@@ -71,7 +72,12 @@ const getContentMd = async () => {
 
 onMounted(() => {
   scrollToTop()
-  changeTab(2)
+  let type = route.query?.type
+  if (type && typeof type === "string") {
+    changeTab(parseInt(type))
+  } else {
+    changeTab(2)
+  }
   getRecomList()
 })
 </script>

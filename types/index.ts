@@ -1,7 +1,7 @@
 export interface CustomRes {
   code: number
   msg?: string
-  data?: LoginInfo & UserInfo & ServiceType[] & RelevantLaws[] & ContentMd
+  data?: any
 }
 
 export interface LoginInfo {
@@ -56,4 +56,10 @@ export interface ContentMd {
 export interface extendedArticlesList {
   id?: number
   title?: string
+}
+
+export interface DateTimes {
+  hours: number
+  minutes: number
+  seconds: number
 }

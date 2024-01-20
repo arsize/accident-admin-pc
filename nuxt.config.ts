@@ -54,6 +54,9 @@ export default defineNuxtConfig({
       "/appointment": {
         ssr: false,
       },
+      "/manageAppoint": {
+        ssr: false,
+      },
     },
   },
 

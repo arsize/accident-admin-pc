@@ -38,18 +38,18 @@ const bgColor = computed(() => {
 <template>
   <header
     :style="`background-color:${bgColor}`"
-    class="navbar h-28 px-10 box-border"
+    class="navbar 2xl:h-28 h-20 px-10 box-border"
   >
-    <div class="mx-auto container flex justify-between items-center py-6">
+    <div class="mx-auto container flex justify-between items-center h-full">
       <NuxtLink :to="localePath('/')">
         <img
-          class="2xl:max-w-80 lg:max-w-60 max-w-52"
+          class="2xl:max-w-80 lg:max-w-60 max-w-48"
           src="~/assets/images/logo.png"
           alt=""
         />
       </NuxtLink>
       <div
-        class="flex text-custom-blue items-center w-[70%] justify-between 2xl:text-xl xl:text-lg text-base font-normal"
+        class="flex text-custom-blue items-center w-[70%] h-full justify-between 2xl:text-xl xl:text-lg text-base font-normal"
       >
         <NuxtLink
           :to="localePath('/service')"

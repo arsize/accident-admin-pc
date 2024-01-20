@@ -65,11 +65,12 @@
       </div>
     </div>
     <div class="2xl:w-[20%] w-[25%] flex flex-col justify-between pt-5 pb-5">
-      <div
+      <NuxtLink
+        to="/appointment"
         class="cursor-pointer w-full font-semibold rounded-full 2xl:h-12 h-10 bg-[#DFEDDA] text-custom-blue flex justify-center items-center"
       >
         預約咨詢服務
-      </div>
+      </NuxtLink>
       <div>
         <div class="text-xl text-custom-blue">想取得最新的法律咨詢?</div>
         <div>來訂閱我們的電子郵報</div>
