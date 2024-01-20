@@ -1,6 +1,3 @@
-import Components from "unplugin-vue-components/vite"
-import { ElementPlusResolver } from "unplugin-vue-components/resolvers"
-
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   devtools: { enabled: false },
@@ -31,14 +28,26 @@ export default defineNuxtConfig({
   typescript: {
     typeCheck: false,
   },
+  runtimeConfig: {
+    public: {
+      apiBase: "/server",
+    },
+  },
   nitro: {
     devProxy: {
-      "/api": {
+      "/server": {
         target: "http://121.43.49.249:8080",
         changeOrigin: true,
       },
     },
+    // 该配置用于服务端请求转发
+    routeRules: {
+      "/server/**": {
+        proxy: "http://121.43.49.249:8080",
+      },
+    },
   },
+
   postcss: {
     plugins: {
       tailwindcss: {},

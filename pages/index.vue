@@ -8,15 +8,18 @@ useHead({
   bodyAttrs: {},
   script: [],
 })
-
+const runtimeConfig = useRuntimeConfig()
 const currentShowTab = ref("")
 const currentShowList = ref<SlideItem[]>([])
 // 法律小知识
 const ledgeObj = ref()
-const getLegalKnowledge = () => {
-  const { data } = useFetch<CustomRes>(`${config.PROXY}/sys/blog/recommend`)
-  if (data.value?.code === 0) {
-    ledgeObj.value = data.value.data ?? {}
+const getLegalKnowledge = async () => {
+  const res = await $fetch<CustomRes>(`/sys/blog/recommend`, {
+    baseURL: runtimeConfig.public.apiBase,
+  })
+  console.log("拿到了数据", res)
+  if (res.code === 0) {
+    ledgeObj.value = res.data ?? {}
     if (ledgeObj.value && Object.keys(ledgeObj.value).length > 0) {
       selectTab(Object.keys(ledgeObj.value)[0])
     }
