@@ -31,6 +31,14 @@ export default defineNuxtConfig({
   typescript: {
     typeCheck: false,
   },
+  nitro: {
+    devProxy: {
+      "/api": {
+        target: "http://121.43.49.249:8080",
+        changeOrigin: true,
+      },
+    },
+  },
   postcss: {
     plugins: {
       tailwindcss: {},

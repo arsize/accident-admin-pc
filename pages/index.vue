@@ -14,7 +14,7 @@ const currentShowList = ref<SlideItem[]>([])
 // 法律小知识
 const ledgeObj = ref()
 const getLegalKnowledge = () => {
-  const { data } = useFetch<CustomRes>(`${config.APIURL}/sys/blog/recommend`)
+  const { data } = useFetch<CustomRes>(`${config.PROXY}/sys/blog/recommend`)
   if (data.value?.code === 0) {
     ledgeObj.value = data.value.data ?? {}
     if (ledgeObj.value && Object.keys(ledgeObj.value).length > 0) {

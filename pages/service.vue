@@ -29,7 +29,7 @@ const scrollToTop = () => {
 const serviceList = ref([])
 const getServiceList = async () => {
   const { data } = await useFetch<CustomRes>(
-    `${config.APIURL}/sys/service_type_info/list`,
+    `${config.PROXY}/sys/service_type_info/list`,
     {
       method: "get",
       onRequest({ request, options }) {

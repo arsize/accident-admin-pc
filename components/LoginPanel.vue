@@ -29,7 +29,7 @@ const validateLogin = (state: any): FormError[] => {
 }
 const onLogin = async () => {
   const { data } = await useFetch<CustomRes>(
-    `${config.APIURL}/sys/auth/account/login`,
+    `${config.PROXY}/sys/auth/account/login`,
     {
       method: "POST",
       body: {
@@ -43,7 +43,7 @@ const onLogin = async () => {
   } else {
     store.token = data.value?.data?.access_token ?? ""
 
-    const _usfo = await useFetch<CustomRes>(`${config.APIURL}/sys/user/info`, {
+    const _usfo = await useFetch<CustomRes>(`${config.PROXY}/sys/user/info`, {
       method: "get",
       onRequest({ request, options }) {
         const headers = options?.headers
@@ -94,7 +94,7 @@ const validateRegister = (state: any): FormError[] => {
 }
 const onRegister = async () => {
   const { data } = await useFetch<CustomRes>(
-    `${config.APIURL}/sys/user/register`,
+    `${config.PROXY}/sys/user/register`,
     {
       method: "POST",
       body: {
