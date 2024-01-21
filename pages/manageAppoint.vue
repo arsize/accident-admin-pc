@@ -126,20 +126,20 @@ onMounted(() => {
             下載記錄
           </div>
         </div>
-        <div class="flex justify-between mt-5 w-full">
-          <div class="w-[30%] flex flex-col bg-[#F7F7F7] p-5">
-            <div>客戶資料</div>
-            <div>
-              <div>姓名:</div>
-              <div>连答问</div>
+        <div class="flex justify-between mt-8 w-full">
+          <div class="w-[30%] h-1/2 flex flex-col bg-[#F7F7F7] p-5 py-10">
+            <div class="text-xl mb-5">客戶資料</div>
+            <div class="mb-5">
+              <div class="text-[#8294BA] text-sm mb-[5px]">姓名:</div>
+              <div class="text-md">连答问</div>
+            </div>
+            <div class="mb-5">
+              <div class="text-[#8294BA] text-sm mb-[5px]">電郵地址:</div>
+              <div class="text-md">afafdf</div>
             </div>
             <div>
-              <div>電郵地址:</div>
-              <div>afafdf</div>
-            </div>
-            <div>
-              <div>聯絡電話:</div>
-              <div>900000000000</div>
+              <div class="text-[#8294BA] text-sm mb-[5px]">聯絡電話:</div>
+              <div class="text-md">900000000000</div>
             </div>
           </div>
           <div class="w-[65%]">
@@ -149,18 +149,20 @@ onMounted(() => {
               >
                 預約記錄
               </div>
-              <div class="py-5 px-5">
-                <div>
-                  <div>預約編號:</div>
-                  <div>3434343</div>
+              <div class="py-5 px-5 w-[70%] flex justify-between">
+                <div class="mb-5">
+                  <div class="mb-10">
+                    <div class="text-[#8294BA] text-sm mb-[5px]">預約編號:</div>
+                    <div class="text-md">3434343</div>
+                  </div>
+                  <div>
+                    <div class="text-[#8294BA] text-sm mb-[5px]">預約狀況:</div>
+                    <div class="text-md">3434343</div>
+                  </div>
                 </div>
                 <div>
-                  <div>下單日期:</div>
-                  <div>3434343</div>
-                </div>
-                <div>
-                  <div>預約狀況:</div>
-                  <div>3434343</div>
+                  <div class="text-[#8294BA] text-sm mb-[5px]">下單日期:</div>
+                  <div class="text-md">3434343</div>
                 </div>
               </div>
             </div>
@@ -169,6 +171,28 @@ onMounted(() => {
                 class="bg-[#ECF8E9] w-full px-[20px] py-[10px] rounded-lg font-bold"
               >
                 咨詢資料
+              </div>
+              <div class="py-5 px-5 w-[70%] flex justify-between">
+                <div class="mb-5">
+                  <div class="mb-10">
+                    <div class="text-[#8294BA] text-sm mb-[5px]">咨詢類型:</div>
+                    <div class="text-md">3434343</div>
+                  </div>
+                  <div>
+                    <div class="text-[#8294BA] text-sm mb-[5px]">案件日期:</div>
+                    <div class="text-md">3434343</div>
+                  </div>
+                </div>
+                <div>
+                  <div class="text-[#8294BA] text-sm mb-[5px]">咨詢時間:</div>
+                  <div class="text-md">3434343</div>
+                </div>
+              </div>
+              <div class="px-5 w-[100%]">
+                <div>
+                  <div class="text-[#8294BA] text-sm mb-[5px]">事件描述:</div>
+                  <div class="text-md">3434343</div>
+                </div>
               </div>
             </div>
           </div>

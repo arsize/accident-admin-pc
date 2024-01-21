@@ -43,18 +43,15 @@ export default defineNuxtConfig({
   nitro: {
     devProxy: {
       "/server": {
-        target: "http://121.43.49.249:8080",
+        target: "https://121.43.49.249/api",
         changeOrigin: true,
       },
     },
     routeRules: {
       "/server/**": {
-        proxy: "http://121.43.49.249:8080/**",
+        proxy: "https://121.43.49.249/api/**",
       },
       "/appointment": {
-        ssr: false,
-      },
-      "/manageAppoint": {
         ssr: false,
       },
     },
