@@ -106,7 +106,11 @@ onMounted(() => {
         </div>
         <div class="w-full pl-5">
           <div class="text-xl mb-10 text-custom-blue">相關法律知识</div>
-          <div class="atc-item w-full mb-5" v-for="(item, index) in someList">
+          <NuxtLink
+            :to="`/legal/${item.id}`"
+            class="atc-item w-full mb-5"
+            v-for="(item, index) in someList"
+          >
             <div class="w-full border rounded-md h-30 relative cursor-pointer">
               <img class="w-full h-full" :src="item.pictureUrl" alt="" />
               <div
@@ -119,7 +123,7 @@ onMounted(() => {
             <div class="p-2 box-border font-light">
               {{ item.title }}
             </div>
-          </div>
+          </NuxtLink>
         </div>
       </div>
       <div class="w-[50%]">
@@ -134,7 +138,9 @@ onMounted(() => {
               class="mb-3 cursor-pointer"
               v-for="item in contentMd.extendedArticles"
             >
-              <div style="color: #fa8216">{{ item.title }}</div>
+              <NuxtLink :to="`/legal/${item.id}`" style="color: #fa8216">{{
+                item.title
+              }}</NuxtLink>
             </li>
           </ul>
         </div>

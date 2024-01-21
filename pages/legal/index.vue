@@ -2,8 +2,6 @@
 import type { CustomRes, SlideItem } from "@/types"
 const runtimeConfig = useRuntimeConfig()
 
-const type = ref("waterfall")
-
 useHead({
   title: "法律小知识-交通意外伤亡及工业伤亡支援中心",
   meta: [],
@@ -39,9 +37,7 @@ const scrollToTop = () => {
 }
 
 // 显示详情
-const showDetail = () => {
-  type.value = "detail"
-}
+const showDetail = () => {}
 
 onMounted(() => {
   getLegalKnowledge()
@@ -58,7 +54,7 @@ onMounted(() => {
     </div>
     <div class="bottom-round-bar"></div>
 
-    <div v-if="type === 'waterfall'">
+    <div>
       <div class="flex container mx-auto h-48 items-center">
         <div v-if="ledgeObj" class="flex mx-auto">
           <div
@@ -72,7 +68,8 @@ onMounted(() => {
         </div>
       </div>
       <div class="flex flex-wrap container mx-auto justify-between">
-        <div
+        <NuxtLink
+          :to="`/legal/${slide.id}`"
           @click="showDetail"
           class="w-[31%] flex cursor-pointer"
           v-for="slide in currentShowList"
@@ -86,10 +83,9 @@ onMounted(() => {
               <div class="textOVerThree" v-html="slide.content"></div>
             </div>
           </div>
-        </div>
+        </NuxtLink>
       </div>
     </div>
-    <div v-else></div>
   </div>
 </template>
 

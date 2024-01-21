@@ -31,6 +31,7 @@ const state = reactive<{
   serviceTypeName: "",
   caseDate: undefined,
   consultDate: undefined,
+  consultTime: undefined,
   consultTimeStart: undefined,
   consultTimeEnd: undefined,
   describeInfo: undefined,
@@ -103,14 +104,16 @@ async function onSubmit(event: FormSubmitEvent<any>) {
   }
 
   // 日期时间
-  state.consultDate = state.consultTimeStart + " - " + state.consultTimeEnd
+  state.consultTime = state.consultTimeStart + "-" + state.consultTimeEnd
   console.log("state", state)
   state.caseDate = `${
     state.caseDate.getMonth() + 1
   }/${state.caseDate.getDate()}/${state.caseDate.getFullYear()}`
-  console.log(state.caseDate)
-  delete state.consultTimeStart
-  delete state.consultTimeEnd
+
+  state.consultDate = `${
+    state.consultDate.getMonth() + 1
+  }/${state.consultDate.getDate()}/${state.consultDate.getFullYear()}`
+
   const stateRes = await useFetch<CustomRes>(`/sys/appointment_record_info`, {
     baseURL: runtimeConfig.public.apiBase,
     method: "post",
@@ -123,7 +126,18 @@ async function onSubmit(event: FormSubmitEvent<any>) {
       }
       options.headers = headers
     },
-    body: state.value,
+    body: {
+      surname: state.surname,
+      firstName: state.firstName,
+      email: state.email,
+      telephone: state.telephone,
+      serviceTypeId: state.serviceTypeId,
+      serviceTypeName: state.serviceTypeName,
+      caseDate: state.caseDate,
+      consultDate: state.consultDate,
+      consultTime: state.consultTime,
+      describeInfo: state.describeInfo,
+    },
   })
   // console.log("stateRes", stateRes)
 }
