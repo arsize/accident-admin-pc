@@ -4,8 +4,6 @@ import LoginPanel from "@/components/LoginPanel.vue"
 import { useStore } from "~/store"
 import type { CustomRes, ServiceType, DateTimes } from "@/types"
 import type { MsgEnum } from "@/app.vue"
-import { getMonth, addMonths } from "date-fns"
-
 const store = useStore()
 import VueDatePicker from "@vuepic/vue-datepicker"
 import "@vuepic/vue-datepicker/dist/main.css"
@@ -20,7 +18,6 @@ useHead({
 })
 
 const state = reactive<{
-  consultTimeStart?: DateTimes | string
   [key: string]: any
 }>({
   surname: undefined,
@@ -32,11 +29,36 @@ const state = reactive<{
   caseDate: undefined,
   consultDate: undefined,
   consultTime: undefined,
-  consultTimeStart: undefined,
-  consultTimeEnd: undefined,
   describeInfo: undefined,
 })
 
+const timeOptions = ref([])
+const getDic = async () => {
+  const res = await $fetch<CustomRes>(`/sys/dict/type/all`, {
+    baseURL: runtimeConfig.public.apiBase,
+    onRequest({ request, options }) {
+      const headers = options?.headers
+        ? new Headers(options.headers)
+        : new Headers()
+      if (!headers.has("Authorization")) {
+        headers.set("Authorization", store.token)
+      }
+      options.headers = headers
+    },
+  })
+  if (res.code === 0) {
+    res.data.map((k: any) => {
+      if (k.dictType === "appointment_consult_time") {
+        k.dataList.map((w: any) => {
+          w.value = w.dictValue
+        })
+        timeOptions.value = k.dataList
+      }
+    })
+  } else {
+    if (msg) msg(res.msg, "warning")
+  }
+}
 // 登入
 const showLoginPanel = ref(false)
 const login = () => {
@@ -72,14 +94,6 @@ async function onSubmit(event: FormSubmitEvent<any>) {
     if (msg) msg("请選擇咨詢日期", "warning")
     return
   }
-  if (!state.consultTimeStart) {
-    if (msg) msg("请選擇咨詢日期开始时间", "warning")
-    return
-  }
-  if (!state.consultTimeEnd) {
-    if (msg) msg("请選擇咨詢日期结束时间", "warning")
-    return
-  }
 
   // 咨询类型
   state.serviceTypeId = parseInt(state.serviceTypeId)
@@ -88,24 +102,8 @@ async function onSubmit(event: FormSubmitEvent<any>) {
       state.serviceTypeName = k.name ?? ""
     }
   })
-  function isDateTimes(time: DateTimes | string): time is DateTimes {
-    return (<DateTimes>time).hours !== undefined
-  }
-  // 处理时间
-  if (isDateTimes(state.consultTimeStart)) {
-    state.consultTimeStart = `${(<DateTimes>state.consultTimeStart).hours}:${
-      state.consultTimeStart.minutes
-    }:${state.consultTimeStart.seconds}`
-  }
-  if (isDateTimes(state.consultTimeEnd)) {
-    state.consultTimeEnd = `${(<DateTimes>state.consultTimeEnd).hours}:${
-      state.consultTimeEnd.minutes
-    }:${state.consultTimeEnd.seconds}`
-  }
 
   // 日期时间
-  state.consultTime = state.consultTimeStart + "-" + state.consultTimeEnd
-  console.log("state", state)
   state.caseDate = `${
     state.caseDate.getMonth() + 1
   }/${state.caseDate.getDate()}/${state.caseDate.getFullYear()}`
@@ -178,6 +176,7 @@ const scrollToTop = () => {
 onMounted(() => {
   scrollToTop()
   getServiceOptions()
+  getDic()
 })
 </script>
 
@@ -283,19 +282,13 @@ onMounted(() => {
                   </UFormGroup>
                 </div>
                 <div class="mt-3 flex justify-between">
-                  <UFormGroup class="w-[49%]" name="consultTimeStart">
-                    <VueDatePicker
-                      time-picker
-                      v-model="state.consultTimeStart"
-                      placeholder="開始時間"
-                    ></VueDatePicker>
-                  </UFormGroup>
-                  <UFormGroup class="w-[49%]" name="consultTimeEnd">
-                    <VueDatePicker
-                      time-picker
-                      v-model="state.consultTimeEnd"
-                      placeholder="結束時間"
-                    ></VueDatePicker>
+                  <UFormGroup class="w-[100%]" name="consultTime">
+                    <USelect
+                      size="lg"
+                      v-model="state.consultTime"
+                      :options="timeOptions"
+                      option-attribute="dictLabel"
+                    />
                   </UFormGroup>
                 </div>
               </div>

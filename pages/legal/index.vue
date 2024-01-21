@@ -67,7 +67,10 @@ onMounted(() => {
           </div>
         </div>
       </div>
-      <div class="flex flex-wrap container mx-auto justify-between">
+      <div
+        v-if="currentShowList && currentShowList.length > 0"
+        class="flex flex-wrap container mx-auto justify-between"
+      >
         <NuxtLink
           :to="`/legal/${slide.id}`"
           @click="showDetail"
@@ -84,6 +87,13 @@ onMounted(() => {
             </div>
           </div>
         </NuxtLink>
+      </div>
+      <div v-else class="flex container mx-auto justify-between items-center">
+        <img
+          class="w-[50px] mx-auto"
+          src="@/assets/images/fade-stagger-circles.png"
+          alt=""
+        />
       </div>
     </div>
   </div>

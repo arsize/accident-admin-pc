@@ -2,10 +2,11 @@
 import type { CustomRes } from "@/types"
 import { useStore } from "~/store"
 import { useRouter } from "vue-router"
+import type { MsgEnum } from "@/app.vue"
 
 const store = useStore()
 const router = useRouter()
-
+const msg = inject<(text?: string, type?: MsgEnum) => void>("message")
 const runtimeConfig = useRuntimeConfig()
 const selectedIndex = ref(0)
 const selectedTabIndex = ref(0)
@@ -92,6 +93,8 @@ const getData = async () => {
   })
   if (res.code === 0) {
     table.value = res.data.list
+  } else {
+    if (msg) msg(res.msg, "warning")
   }
 }
 const showDetail = ref(false)

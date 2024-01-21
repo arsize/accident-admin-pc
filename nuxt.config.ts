@@ -5,6 +5,7 @@ export default defineNuxtConfig({
     pageTransition: { name: "page", mode: "out-in" },
   },
   css: [
+    "~/assets/css/index.css",
     "~/assets/css/main.css",
     "~/assets/css/animation.css",
     "@vuepic/vue-datepicker/dist/main.css",
