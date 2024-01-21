@@ -17,6 +17,19 @@ export default {
       },
       colors: {
         "custom-blue": "#262262",
+        yellowbtn: {
+          50: "#FCB04C",
+          100: "#FCB04C",
+          200: "#FCB04C",
+          300: "#FCB04C",
+          400: "#FCB04C",
+          500: "#FCB04C",
+          600: "#FCB04C",
+          700: "#FCB04C",
+          800: "#FCB04C",
+          900: "#FCB04C",
+          950: "#FCB04C",
+        },
         defaultb: {
           50: "#85C8EE",
           100: "#85C8EE",

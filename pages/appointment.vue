@@ -7,6 +7,9 @@ import type { MsgEnum } from "@/app.vue"
 const store = useStore()
 import VueDatePicker from "@vuepic/vue-datepicker"
 import "@vuepic/vue-datepicker/dist/main.css"
+import { useRouter } from "vue-router"
+
+const router = useRouter()
 const runtimeConfig = useRuntimeConfig()
 const msg = inject<(text?: string, type?: MsgEnum) => void>("message")
 
@@ -104,39 +107,57 @@ async function onSubmit(event: FormSubmitEvent<any>) {
   })
 
   // 日期时间
-  state.caseDate = `${
-    state.caseDate.getMonth() + 1
-  }/${state.caseDate.getDate()}/${state.caseDate.getFullYear()}`
+  if (state.caseDate) {
+    state.caseDate = `${
+      state.caseDate.getMonth() + 1
+    }/${state.caseDate.getDate()}/${state.caseDate.getFullYear()}`
+  }
+  if (state.consultDate) {
+    state.consultDate = `${
+      state.consultDate.getMonth() + 1
+    }/${state.consultDate.getDate()}/${state.consultDate.getFullYear()}`
+  }
 
-  state.consultDate = `${
-    state.consultDate.getMonth() + 1
-  }/${state.consultDate.getDate()}/${state.consultDate.getFullYear()}`
-
-  const stateRes = await useFetch<CustomRes>(`/sys/appointment_record_info`, {
-    baseURL: runtimeConfig.public.apiBase,
-    method: "post",
-    onRequest({ request, options }) {
-      const headers = options?.headers
-        ? new Headers(options.headers)
-        : new Headers()
-      if (!headers.has("Authorization")) {
-        headers.set("Authorization", store.token)
-      }
-      options.headers = headers
-    },
-    body: {
-      surname: state.surname,
-      firstName: state.firstName,
-      email: state.email,
-      telephone: state.telephone,
-      serviceTypeId: state.serviceTypeId,
-      serviceTypeName: state.serviceTypeName,
-      caseDate: state.caseDate,
-      consultDate: state.consultDate,
-      consultTime: state.consultTime,
-      describeInfo: state.describeInfo,
-    },
-  })
+  const stateRes: any = await $fetch<CustomRes>(
+    `/sys/appointment_record_info`,
+    {
+      baseURL: runtimeConfig.public.apiBase,
+      method: "post",
+      onRequest({ request, options }) {
+        const headers = options?.headers
+          ? new Headers(options.headers)
+          : new Headers()
+        if (!headers.has("Authorization")) {
+          headers.set("Authorization", store.token)
+        }
+        options.headers = headers
+      },
+      body: {
+        surname: state.surname,
+        firstName: state.firstName,
+        email: state.email,
+        telephone: state.telephone,
+        serviceTypeId: state.serviceTypeId,
+        serviceTypeName: state.serviceTypeName,
+        caseDate: state.caseDate,
+        consultDate: state.consultDate,
+        consultTime: state.consultTime,
+        describeInfo: state.describeInfo,
+      },
+    }
+  )
+  if (stateRes.code === 0) {
+    if (msg) {
+      msg("预约成功", "success")
+    }
+    router.push({
+      path: "/manageAppoint",
+    })
+  } else {
+    if (msg) {
+      msg(stateRes.msg, "warning")
+    }
+  }
   // console.log("stateRes", stateRes)
 }
 

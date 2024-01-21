@@ -18,7 +18,7 @@ const selectedTabFn = (index: number) => {
 }
 const columns = [
   {
-    key: "id",
+    key: "appointmentCode",
     label: "預約編號",
   },
   {
@@ -73,14 +73,22 @@ const confirmDel = async () => {
 const table = ref([])
 const current = ref(1)
 const total = ref(10)
+const searchVal = ref("")
 const getData = async () => {
+  let query: any = {
+    page: current.value,
+    limit: 10,
+  }
+  if (selectedTabIndex.value === 0) {
+    query.appointmentCode = searchVal.value
+  }
+  if (selectedTabIndex.value === 1) {
+    query.createDate = searchVal.value
+  }
   const res = await $fetch<CustomRes>(`/sys/appointment_record_info/page`, {
     baseURL: runtimeConfig.public.apiBase,
     method: "get",
-    query: {
-      page: 1,
-      limit: 10,
-    },
+    query: query,
     onRequest({ request, options }) {
       const headers = options?.headers
         ? new Headers(options.headers)
@@ -98,8 +106,35 @@ const getData = async () => {
   }
 }
 const showDetail = ref(false)
-const showDetailFn = () => {
+const showDetailFn = (id: any) => {
   showDetail.value = true
+  getDetailData(id)
+}
+const refrsh = () => {
+  searchVal.value = ""
+  getData()
+}
+// 查询详情
+const detailData: any = ref(null)
+const getDetailData = async (id: number) => {
+  const res = await $fetch<CustomRes>(`/sys/appointment_record_info/${id}`, {
+    baseURL: runtimeConfig.public.apiBase,
+    method: "get",
+    onRequest({ request, options }) {
+      const headers = options?.headers
+        ? new Headers(options.headers)
+        : new Headers()
+      if (!headers.has("Authorization")) {
+        headers.set("Authorization", store.token)
+      }
+      options.headers = headers
+    },
+  })
+  if (res.code === 0) {
+    detailData.value = res.data
+  } else {
+    if (msg) msg(res.msg, "warning")
+  }
 }
 const goback = () => {
   showDetail.value = false
@@ -150,15 +185,15 @@ onMounted(() => {
               <div class="text-xl mb-5">客戶資料</div>
               <div class="mb-5">
                 <div class="text-[#8294BA] text-sm mb-[5px]">姓名:</div>
-                <div class="text-md">连答问</div>
+                <div class="text-md">{{ store.userInfo?.realName }}</div>
               </div>
               <div class="mb-5">
                 <div class="text-[#8294BA] text-sm mb-[5px]">電郵地址:</div>
-                <div class="text-md">afafdf</div>
+                <div class="text-md">{{ store.userInfo?.email }}</div>
               </div>
               <div>
                 <div class="text-[#8294BA] text-sm mb-[5px]">聯絡電話:</div>
-                <div class="text-md">900000000000</div>
+                <div class="text-md">{{ store.userInfo?.mobile }}</div>
               </div>
             </div>
             <div class="w-[65%]">
@@ -174,18 +209,28 @@ onMounted(() => {
                       <div class="text-[#8294BA] text-sm mb-[5px]">
                         預約編號:
                       </div>
-                      <div class="text-md">3434343</div>
+                      <div class="text-md">
+                        {{ detailData.appointmentCode }}
+                      </div>
                     </div>
                     <div>
                       <div class="text-[#8294BA] text-sm mb-[5px]">
                         預約狀況:
                       </div>
-                      <div class="text-md">3434343</div>
+                      <div class="text-md" v-if="detailData.state === 0">
+                        未完成
+                      </div>
+                      <div class="text-md" v-else-if="detailData.state === 1">
+                        已完成
+                      </div>
+                      <div class="text-md" v-else-if="detailData.state === 2">
+                        已取消
+                      </div>
                     </div>
                   </div>
                   <div>
                     <div class="text-[#8294BA] text-sm mb-[5px]">下單日期:</div>
-                    <div class="text-md">3434343</div>
+                    <div class="text-md">{{ detailData.createDate }}</div>
                   </div>
                 </div>
               </div>
@@ -201,24 +246,26 @@ onMounted(() => {
                       <div class="text-[#8294BA] text-sm mb-[5px]">
                         咨詢類型:
                       </div>
-                      <div class="text-md">3434343</div>
+                      <div class="text-md">
+                        {{ detailData.serviceTypeName }}
+                      </div>
                     </div>
                     <div>
                       <div class="text-[#8294BA] text-sm mb-[5px]">
                         案件日期:
                       </div>
-                      <div class="text-md">3434343</div>
+                      <div class="text-md">{{ detailData.caseDate }}</div>
                     </div>
                   </div>
                   <div>
                     <div class="text-[#8294BA] text-sm mb-[5px]">咨詢時間:</div>
-                    <div class="text-md">3434343</div>
+                    <div class="text-md">{{ detailData.consultTime }}</div>
                   </div>
                 </div>
                 <div class="px-5 w-[100%]">
                   <div>
                     <div class="text-[#8294BA] text-sm mb-[5px]">事件描述:</div>
-                    <div class="text-md">3434343</div>
+                    <div class="text-md">{{ detailData.describeInfo }}</div>
                   </div>
                 </div>
               </div>
@@ -228,12 +275,34 @@ onMounted(() => {
         <div v-else class="w-[100%]">
           <div class="text-2xl font-bold">預約記錄</div>
           <div class="w-full mt-10 flex justify-between">
-            <div class="w-[40%]">
-              <UInput placeholder="搜寻">
+            <div class="w-[30%] flex items-center">
+              <UInput
+                v-model="searchVal"
+                placeholder="搜寻"
+                :ui="{ icon: { trailing: { pointer: '' } } }"
+              >
                 <template #trailing>
-                  <Icon name="heroicons-outline:arrow-sm-right" class="mr-2" />
+                  <UButton
+                    v-show="true"
+                    color="gray"
+                    class="cursor-pointer"
+                    variant="link"
+                    icon="i-heroicons-arrow-long-right-20-solid"
+                    :padded="false"
+                    @click="getData"
+                  />
                 </template>
               </UInput>
+              <UButton
+                v-show="true"
+                color="gray"
+                class="hover:text-white cursor-pointer bg-[#FCB04C] px-3 py-2 text-sm text-white ml-5"
+                variant="link"
+                icon="i-heroicons-arrow-path-20-solid"
+                :padded="false"
+                @click="refrsh"
+                >重置</UButton
+              >
             </div>
             <div class="flex items-center text-sm">
               <div>篩選</div>
@@ -263,9 +332,17 @@ onMounted(() => {
             :columns="columns"
             :rows="table"
           >
+            <template #serviceTypeId-data="{ row }">
+              <div>{{ row.serviceTypeName }}</div>
+            </template>
+            <template #state-data="{ row }">
+              <div v-if="row.state === 0">未完成</div>
+              <div v-else-if="row.state === 1">已完成</div>
+              <div v-else-if="row.state === 2">已取消</div>
+            </template>
             <template #actions-data="{ row }">
               <div
-                @click="showDetailFn"
+                @click="showDetailFn(row.id)"
                 class="w-30 cursor-pointer h-8 flex justify-center items-center text-white bg-[#FCB04C]"
               >
                 詳情
@@ -274,9 +351,11 @@ onMounted(() => {
           </UTable>
 
           <div
+            v-if="table.length > 10"
             class="flex justify-end px-3 py-3.5 border-t border-gray-200 dark:border-gray-700"
           >
             <UPagination
+              :active-button="{ color: 'yellowbtn' }"
               v-model="current"
               :page-count="total"
               :total="table.length"
@@ -289,15 +368,15 @@ onMounted(() => {
           <div class="text-xl mb-5">客戶資料</div>
           <div class="mb-5">
             <div class="text-[#8294BA] text-sm mb-[5px]">姓名:</div>
-            <div class="text-md">连答问</div>
+            <div class="text-md">{{ store.userInfo?.realName }}</div>
           </div>
           <div class="mb-5">
             <div class="text-[#8294BA] text-sm mb-[5px]">電郵地址:</div>
-            <div class="text-md">afafdf</div>
+            <div class="text-md">{{ store.userInfo?.email }}</div>
           </div>
           <div>
             <div class="text-[#8294BA] text-sm mb-[5px]">聯絡電話:</div>
-            <div class="text-md">900000000000</div>
+            <div class="text-md">{{ store.userInfo?.mobile }}</div>
           </div>
 
           <div
@@ -320,7 +399,7 @@ onMounted(() => {
     </div>
     <div
       v-if="delisopen"
-      class="absolute z-40 w-[400px] rounded-xl top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] bg-white p-5 px-10 box-border"
+      class="absolute z-40 w-[400px] rounded-xl top-[40%] left-[50%] translate-x-[-50%] translate-y-[-50%] bg-white p-5 px-10 box-border"
     >
       <div class="text-xl mb-10">刪除帳戶</div>
       <div class="font-normal">
