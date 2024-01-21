@@ -76,7 +76,9 @@ onMounted(() => {
                 class="mb-3 cursor-pointer"
                 v-for="item in contentObj.extendedArticles"
               >
-                <div style="color: #fa8216">{{ item.title }}</div>
+                <NuxtLink :to="`/legal/${item.id}`" style="color: #fa8216">{{
+                  item.title
+                }}</NuxtLink>
               </li>
             </ul>
           </div>
