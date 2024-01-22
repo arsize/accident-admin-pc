@@ -26,9 +26,17 @@ const getContent = async () => {
   }
 }
 
+const scrollToTop = () => {
+  document.getElementById("layout-box")?.scrollTo({
+    top: 0,
+    behavior: "smooth",
+  })
+}
+
 onMounted(() => {
   getLegalKnowledge()
   getContent()
+  scrollToTop()
 })
 </script>
 
