@@ -16,7 +16,7 @@ export default defineI18nConfig(() => ({
       LegalKnowledge: "法律小知識",
       AboutTheCenter: "關於中心",
       ContactUs: "聯絡我們",
-      AppointmentConsultation: "預約咨詢",
+      AppointmentConsultation: "預約諮詢",
       LogInAndRegister: "登入/註冊",
       ChineseAndEnglish: "cn | en",
     },

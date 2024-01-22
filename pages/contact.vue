@@ -32,14 +32,14 @@ onMounted(() => {
       <div>
         如你需要尋求交通意外傷亡或工業傷亡相關的法律支援，可透過<span
           class="text-custom-blue font-medium"
-          >電話，Whatapp及電郵</span
-        >等方式聯絡我們，亦可于網站內直接預約咨詢，當我方接受到你的預約訊息時，會立即聯絡你及確認預約詳情。
+          >電話，Whatsapp及電郵</span
+        >等方式聯絡我們，亦可于網站內直接預約諮詢，當我方接受到你的預約訊息時，會立即聯絡你及確認預約詳情。
       </div>
       <NuxtLink
         to="/appointment"
         class="text-custom-blue w-80 font-semibold 2xl:text-xl text-base bg-[#DFEDDA] flex justify-center items-center h-12 mt-20 mx-auto cursor-pointer rounded-full"
       >
-        預約咨詢服務
+        預約諮詢服務
       </NuxtLink>
       <div class="flex w-[80%] mx-auto justify-between 2xl:mt-28 mt-12">
         <div>

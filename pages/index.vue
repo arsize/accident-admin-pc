@@ -60,13 +60,13 @@ getLegalKnowledge()
           工業傷亡支援中心
         </div>
         <div class="pt-5 2xl:text-2xl text-xl text-gray-400">
-          專門為意外受害人士提供法律咨詢服務
+          專門為意外受害人士提供法律諮詢服務
         </div>
         <NuxtLink
           to="/appointment"
           class="2xl:mt-20 mt-10 2xl:w-72 w-64 2xl:h-16 h-14 rounded-3xl bg-[#E0EEDA] flex justify-center items-center text-xl text-custom-blue font-bold tracking-widest cursor-pointer shadow-xl"
         >
-          預約咨詢服務
+          預約諮詢服務
         </NuxtLink>
         <img
           class="w-96 2xl:w-1/3 xl:w-2/5 absolute top-20 right-0"

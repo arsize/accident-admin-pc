@@ -39,6 +39,7 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       apiBase: "/server",
+      gtagId: "G-0W6FFPBY2X",
     },
   },
   nitro: {
@@ -53,6 +54,9 @@ export default defineNuxtConfig({
         proxy: "https://121.43.49.249/api/**",
       },
       "/appointment": {
+        ssr: false,
+      },
+      "/manageAppoint": {
         ssr: false,
       },
     },

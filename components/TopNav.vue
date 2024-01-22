@@ -6,6 +6,7 @@ const localePath = useLocalePath()
 const switchLocalePath = useSwitchLocalePath()
 const route = useRoute()
 const store = useStore()
+const router = useRouter()
 
 // 登入
 const showLoginPanel = ref(false)
@@ -33,6 +34,12 @@ const bgColor = computed(() => {
     return "#eef8fe"
   }
 })
+const goout = () => {
+  store.token = ""
+  router.push({
+    path: "/",
+  })
+}
 </script>
 
 <template>
@@ -95,7 +102,23 @@ const bgColor = computed(() => {
           >{{ $t("AppointmentConsultation") }}</NuxtLink
         >
         <div v-if="store.token" class="cursor-pointer">
-          {{ `你好,${store.userInfo?.firstName}先生` }}
+          <UPopover>
+            <div class="flex items-center">
+              <div class="mr-2 cursor-pointer">
+                {{ `你好,${store.userInfo?.firstName}先生` }}
+              </div>
+              <Icon name="i-heroicons-chevron-down-20-solid">j</Icon>
+            </div>
+
+            <template #panel>
+              <div
+                @click="goout"
+                class="py-4 flex items-center justify-center cursor-pointer"
+              >
+                <div class="hover:bg-[#eee] px-3 py-1">退出</div>
+              </div>
+            </template>
+          </UPopover>
         </div>
         <div @click="login" v-else>
           {{ $t("LogInAndRegister") }}

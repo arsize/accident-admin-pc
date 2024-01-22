@@ -31,7 +31,7 @@ const columns = [
   },
   {
     key: "serviceTypeId",
-    label: "咨詢種類",
+    label: "諮詢種類",
   },
   {
     key: "state",
@@ -142,6 +142,9 @@ const goback = () => {
 const hideDialog = () => {
   delisopen.value = false
 }
+const printPage = () => {
+  window.print()
+}
 onMounted(() => {
   getData()
 })
@@ -175,6 +178,7 @@ onMounted(() => {
               <div class="ml-1">返回</div>
             </div>
             <div
+              @click="printPage"
               class="w-[150px] text-white flex justify-center items-center bg-[#FCB04C] text-sm h-9 cursor-pointer"
             >
               下載記錄
@@ -203,7 +207,7 @@ onMounted(() => {
                 >
                   預約記錄
                 </div>
-                <div class="py-5 px-5 w-[70%] flex justify-between">
+                <div class="py-5 px-5 w-[90%] flex justify-between">
                   <div class="mb-5">
                     <div class="mb-10">
                       <div class="text-[#8294BA] text-sm mb-[5px]">
@@ -238,13 +242,13 @@ onMounted(() => {
                 <div
                   class="bg-[#ECF8E9] w-full px-[20px] py-[10px] rounded-lg font-bold"
                 >
-                  咨詢資料
+                  諮詢資料
                 </div>
-                <div class="py-5 px-5 w-[70%] flex justify-between">
+                <div class="py-5 px-5 w-[90%] flex justify-between">
                   <div class="mb-5">
                     <div class="mb-10">
                       <div class="text-[#8294BA] text-sm mb-[5px]">
-                        咨詢類型:
+                        諮詢類型:
                       </div>
                       <div class="text-md">
                         {{ detailData.serviceTypeName }}
@@ -258,7 +262,7 @@ onMounted(() => {
                     </div>
                   </div>
                   <div>
-                    <div class="text-[#8294BA] text-sm mb-[5px]">咨詢時間:</div>
+                    <div class="text-[#8294BA] text-sm mb-[5px]">諮詢時間:</div>
                     <div class="text-md">{{ detailData.consultTime }}</div>
                   </div>
                 </div>
@@ -343,7 +347,7 @@ onMounted(() => {
             <template #actions-data="{ row }">
               <div
                 @click="showDetailFn(row.id)"
-                class="w-30 cursor-pointer h-8 flex justify-center items-center text-white bg-[#FCB04C]"
+                class="w-30 cursor-pointer px-2 h-8 flex justify-center items-center text-white bg-[#FCB04C]"
               >
                 詳情
               </div>

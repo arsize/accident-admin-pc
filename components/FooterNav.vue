@@ -1,4 +1,12 @@
-<script setup></script>
+<script setup>
+const openurl = (type) => {
+  if (type === "facebook") {
+    window.open(
+      "https://www.facebook.com/profile.php?id=100095069115429&mibextid=LQQJ4d"
+    )
+  }
+}
+</script>
 
 <template>
   <footer class="mt-40 mb-14 container mx-auto h-56 flex justify-between">
@@ -10,6 +18,7 @@
 
         <div class="flex ml-5">
           <img
+            @click="openurl('facebook')"
             class="w-12 h-12 mr-5 cursor-pointer"
             src="~/assets/images/image-06.png"
             alt=""
@@ -69,10 +78,10 @@
         to="/appointment"
         class="cursor-pointer w-full font-semibold rounded-full 2xl:h-12 h-10 bg-[#DFEDDA] text-custom-blue flex justify-center items-center"
       >
-        預約咨詢服務
+        預約諮詢服務
       </NuxtLink>
       <div>
-        <div class="text-xl text-custom-blue">想取得最新的法律咨詢?</div>
+        <div class="text-xl text-custom-blue">想取得最新的法律諮詢?</div>
         <div>來訂閱我們的電子郵報</div>
       </div>
       <div class="relative w-[90%] h-10">

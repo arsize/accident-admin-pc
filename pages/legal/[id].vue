@@ -27,7 +27,6 @@ const getContent = async () => {
 }
 
 onMounted(() => {
-  console.log(route.params.id)
   getLegalKnowledge()
   getContent()
 })

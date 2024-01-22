@@ -14,7 +14,7 @@ const runtimeConfig = useRuntimeConfig()
 const msg = inject<(text?: string, type?: MsgEnum) => void>("message")
 
 useHead({
-  title: "预约咨询-交通意外伤亡及工业伤亡支援中心",
+  title: "预约諮詢-交通意外伤亡及工业伤亡支援中心",
   meta: [],
   bodyAttrs: {},
   script: [],
@@ -90,11 +90,11 @@ async function onSubmit(event: FormSubmitEvent<any>) {
     return
   }
   if (!state.serviceTypeId) {
-    if (msg) msg("请選擇咨詢類型", "warning")
+    if (msg) msg("请選擇諮詢類型", "warning")
     return
   }
   if (!state.consultDate) {
-    if (msg) msg("请選擇咨詢日期", "warning")
+    if (msg) msg("请選擇諮詢日期", "warning")
     return
   }
 
@@ -194,10 +194,25 @@ const scrollToTop = () => {
   })
 }
 
+const initializationData = () => {
+  state.firstName = store.userInfo?.firstName
+  state.surname = store.userInfo?.surname
+  state.email = store.userInfo?.email
+  state.telephone = store.userInfo?.mobile
+}
+
+const formatDefault = (date: any) => {
+  const day = date.getDate()
+  const month = date.getMonth() + 1
+  const year = date.getFullYear()
+  return `${day}/${month}/${year}`
+}
+
 onMounted(() => {
   scrollToTop()
   getServiceOptions()
   getDic()
+  initializationData()
 })
 </script>
 
@@ -206,14 +221,14 @@ onMounted(() => {
     <div
       class="bg-[#EEF8FE] 2xl:h-64 h-48 2xl:text-6xl text-5xl p text-custom-blue font-semibold font-NotoHk tracking-widest flex items-center"
     >
-      <div class="container mx-auto pl-5">預約咨詢</div>
+      <div class="container mx-auto pl-5">預約諮詢</div>
     </div>
     <div class="bottom-round-bar"></div>
     <div v-if="!store.token">
       <div
         class="2xl:w-[800px] w-[800px] mx-auto mt-20 text-xl font-light tracking-widest flex justify-center"
       >
-        歡迎你來預約咨詢，請先登入後或註冊後再進行預約
+        歡迎你來預約諮詢，請先登入後或註冊後再進行預約
       </div>
       <div
         @click="login"
@@ -279,7 +294,7 @@ onMounted(() => {
                 </div>
                 <div class="h-[40px]"></div>
                 <div class="mt-2">
-                  <UFormGroup label="咨詢類型" name="serviceTypeId" required>
+                  <UFormGroup label="諮詢類型" name="serviceTypeId" required>
                     <USelect
                       size="lg"
                       v-model="state.serviceTypeId"
@@ -289,8 +304,9 @@ onMounted(() => {
                   </UFormGroup>
                 </div>
                 <div class="mt-3">
-                  <UFormGroup label="咨詢時間" name="consultDate" required>
+                  <UFormGroup label="諮詢時間" name="consultDate" required>
                     <VueDatePicker
+                      :format="formatDefault"
                       v-model="state.consultDate"
                       placeholder="選擇日期"
                       :allowed-dates="allowedDates"
@@ -325,6 +341,7 @@ onMounted(() => {
                 <div class="mt-4">
                   <UFormGroup label="案件日期" name="caseDate">
                     <VueDatePicker
+                      :format="formatDefault"
                       v-model="state.caseDate"
                       placeholder="選擇日期"
                       :enable-time-picker="false"
