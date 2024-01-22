@@ -1,6 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  devtools: { enabled: false },
+  devtools: { enabled: true },
   app: {
     pageTransition: { name: "page", mode: "out-in" },
   },
@@ -54,9 +54,6 @@ export default defineNuxtConfig({
         proxy: "https://121.43.49.249/api/**",
       },
       "/appointment": {
-        ssr: false,
-      },
-      "/manageAppoint": {
         ssr: false,
       },
     },
