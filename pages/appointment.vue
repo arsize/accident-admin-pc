@@ -14,7 +14,7 @@ const runtimeConfig = useRuntimeConfig()
 const msg = inject<(text?: string, type?: MsgEnum) => void>("message")
 
 useHead({
-  title: "预约諮詢-交通意外伤亡及工业伤亡支援中心",
+  title: "预约諮詢-交通意外傷亡及工業傷亡支援中心",
   meta: [],
   bodyAttrs: {},
   script: [],
@@ -31,33 +31,51 @@ const state = reactive<{
   serviceTypeName: "",
   caseDate: undefined,
   consultDate: undefined,
-  consultTime: undefined,
+  consultTime: [],
   describeInfo: undefined,
 })
 
-const timeOptions = ref([])
+const timeOptions = ref<any>([])
 const getDic = async () => {
-  const res = await $fetch<CustomRes>(`/sys/dict/type/all`, {
-    baseURL: runtimeConfig.public.apiBase,
-    onRequest({ request, options }) {
-      const headers = options?.headers
-        ? new Headers(options.headers)
-        : new Headers()
-      if (!headers.has("Authorization")) {
-        headers.set("Authorization", store.token)
+  let _temp = ""
+  console.log("xxxxxxxxxxxxxxxxxxxx", state.consultDate)
+  if (state.consultDate) {
+    if (typeof state.consultDate === "string") {
+      if (state.consultDate.includes("/")) {
+        return
       }
-      options.headers = headers
-    },
-  })
+    }
+    let day = state.consultDate.getDate()
+    let mon = state.consultDate.getMonth() + 1
+    let ye = state.consultDate.getFullYear()
+    _temp = `${day}/${mon}/${ye}`
+  }
+
+  if (state.serviceTypeId) {
+    state.serviceTypeId = parseInt(state.serviceTypeId)
+  }
+  const res = await $fetch<CustomRes>(
+    `/sys/appointment_record_info/queryAvailablePeriods`,
+    {
+      baseURL: runtimeConfig.public.apiBase,
+      method: "get",
+      query: {
+        serviceTypeId: state.serviceTypeId,
+        consultDate: _temp,
+      },
+      onRequest({ request, options }) {
+        const headers = options?.headers
+          ? new Headers(options.headers)
+          : new Headers()
+        if (!headers.has("Authorization")) {
+          headers.set("Authorization", store.token)
+        }
+        options.headers = headers
+      },
+    }
+  )
   if (res.code === 0) {
-    res.data.map((k: any) => {
-      if (k.dictType === "appointment_consult_time") {
-        k.dataList.map((w: any) => {
-          w.value = w.dictValue
-        })
-        timeOptions.value = k.dataList
-      }
-    })
+    timeOptions.value = res.data
   } else {
     if (msg) msg(res.msg, "warning")
   }
@@ -106,16 +124,32 @@ async function onSubmit(event: FormSubmitEvent<any>) {
     }
   })
 
+  if (state.consultDate) {
+    let day = state.consultDate.getDate()
+    let mon = state.consultDate.getMonth() + 1
+    let ye = state.consultDate.getFullYear()
+    state.consultDate = `${day}/${mon}/${ye}`
+  }
+
   // 日期时间
   if (state.caseDate) {
     state.caseDate = `${
       state.caseDate.getMonth() + 1
     }/${state.caseDate.getDate()}/${state.caseDate.getFullYear()}`
   }
-  if (state.consultDate) {
-    state.consultDate = `${
-      state.consultDate.getMonth() + 1
-    }/${state.consultDate.getDate()}/${state.consultDate.getFullYear()}`
+
+  // 预约时间
+  if (state.consultTime?.length > 0) {
+    if (state.consultTime?.length == 1) {
+      state.consultTime = timeOptions.value[state.consultTime[0]].times
+    } else if (state.consultTime?.length == 2) {
+      console.log("hello", timeOptions.value)
+      console.log("ui", state.consultTime)
+      state.consultTime =
+        timeOptions.value[state.consultTime[0]].times +
+        "," +
+        timeOptions.value[state.consultTime[1]].times
+    }
   }
 
   const stateRes: any = await $fetch<CustomRes>(
@@ -165,7 +199,7 @@ async function onSubmit(event: FormSubmitEvent<any>) {
 // 100天内
 const allowedDates = computed(() => {
   let allowD = [new Date()]
-  for (let i = 1; i < 100; i++) {
+  for (let i = 1; i < 300; i++) {
     allowD.push(new Date(new Date().setDate(new Date().getDate() + i)))
   }
   return allowD
@@ -208,10 +242,67 @@ const formatDefault = (date: any) => {
   return `${day}/${month}/${year}`
 }
 
+watch(
+  () => state.consultDate,
+  (val) => {
+    if (state.consultDate && state.serviceTypeId) {
+      getDic()
+    }
+  },
+  {
+    deep: true,
+  }
+)
+watch(
+  () => state.serviceTypeId,
+  (val) => {
+    if (state.consultDate && state.serviceTypeId) {
+      getDic()
+    }
+  },
+  {
+    deep: true,
+  }
+)
+
+watch(
+  () => state.consultTime,
+  (val) => {
+    console.log("state.consultTime", state.consultTime)
+    if (state.consultTime?.length == 0) {
+      console.log("1")
+      timeOptions.value.map((k: any) => {
+        k.disabled = false
+      })
+    }
+    if (state.consultTime?.length == 1) {
+      console.log("2")
+      timeOptions.value.map((k: any) => {
+        if (
+          !state.consultTime.includes(k.id) &&
+          k.id != state.consultTime[0] + 1
+        ) {
+          k.disabled = true
+        }
+      })
+    }
+    if (state.consultTime?.length == 2) {
+      console.log("3")
+      timeOptions.value.map((k: any) => {
+        if (!state.consultTime.includes(k.id)) {
+          k.disabled = true
+        }
+      })
+    }
+  },
+  {
+    deep: true,
+  }
+)
+
 onMounted(() => {
   scrollToTop()
   getServiceOptions()
-  getDic()
   initializationData()
 })
 </script>
@@ -240,7 +331,7 @@ onMounted(() => {
     <div v-else class="flex container justify-between mx-auto mt-[80px] px-5">
       <div class="left w-1/3" v-if="store.userInfo">
         <div class="text-3xl font-semibold mb-5">
-          你好，{{ `${store.userInfo.firstName}先生` }}
+          你好，{{ `${store.userInfo.realName}` }}
         </div>
         <div class="leading-loose text-[#707070]">
           歡迎你來預約諮詢。請填寫右方表格進
@@ -314,18 +405,21 @@ onMounted(() => {
                       locale="cn"
                       cancel-text="close"
                       select-text="select"
-                      disable-year-select
                     ></VueDatePicker>
                   </UFormGroup>
                 </div>
                 <div class="mt-3 flex justify-between">
                   <UFormGroup class="w-[100%]" name="consultTime">
-                    <USelect
+                    <USelectMenu
                       size="lg"
+                      multiple
                       v-model="state.consultTime"
                       :options="timeOptions"
-                      option-attribute="dictLabel"
-                    />
+                      value-attribute="id"
+                      option-attribute="times"
+                    >
+                      <template #empty> 无数据 </template></USelectMenu
+                    >
                   </UFormGroup>
                 </div>
               </div>
@@ -346,7 +440,6 @@ onMounted(() => {
                       placeholder="選擇日期"
                       :enable-time-picker="false"
                       locale="cn"
-                      disable-year-select
                     ></VueDatePicker>
                   </UFormGroup>
                 </div>

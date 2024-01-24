@@ -1,6 +1,6 @@
 <script setup lang="ts">
 useHead({
-  title: "联系我们-交通意外伤亡及工业伤亡支援中心",
+  title: "联系我们-交通意外傷亡及工業傷亡支援中心",
   meta: [],
   bodyAttrs: {},
   script: [],

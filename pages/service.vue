@@ -10,7 +10,7 @@ const store = useStore()
 const route = useRoute()
 
 useHead({
-  title: "服务范围-交通意外伤亡及工业伤亡支援中心",
+  title: "服务范围-交通意外傷亡及工業傷亡支援中心",
   meta: [],
   bodyAttrs: {},
   script: [],

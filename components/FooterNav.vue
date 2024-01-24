@@ -5,6 +5,9 @@ const openurl = (type) => {
       "https://www.facebook.com/profile.php?id=100095069115429&mibextid=LQQJ4d"
     )
   }
+  if (type === "whatsapp") {
+    window.open("https://wa.me/85252146268")
+  }
 }
 </script>
 
@@ -24,11 +27,7 @@ const openurl = (type) => {
             alt=""
           />
           <img
-            class="w-12 h-12 mr-5 cursor-pointer"
-            src="~/assets/images/image-07.png"
-            alt=""
-          />
-          <img
+            @click="openurl('whatsapp')"
             class="w-12 h-12 mr-5 cursor-pointer"
             src="~/assets/images/image-08.png"
             alt=""
@@ -73,33 +72,21 @@ const openurl = (type) => {
         </div>
       </div>
     </div>
-    <div class="2xl:w-[20%] w-[25%] flex flex-col justify-between pt-5 pb-5">
+    <div
+      class="2xl:w-[20%] w-[25%] flex flex-col justify-center items-center pt-5 pb-5"
+    >
       <NuxtLink
         to="/appointment"
         class="cursor-pointer w-full font-semibold rounded-full 2xl:h-12 h-10 bg-[#DFEDDA] text-custom-blue flex justify-center items-center"
       >
         預約諮詢服務
       </NuxtLink>
-      <div>
-        <div class="text-xl text-custom-blue">想取得最新的法律諮詢?</div>
-        <div>來訂閱我們的電子郵報</div>
-      </div>
-      <div class="relative w-[90%] h-10">
-        <input
-          class="w-full border h-full rounded-md pl-5"
-          type="text"
-          placeholder="輸入電郵訂閱我們"
-        />
-        <img
-          class="cursor-pointer absolute right-[5px] top-[50%] w-8 -translate-y-[50%]"
-          src="~/assets/images/message.png"
-          alt=""
-        />
-      </div>
     </div>
   </footer>
-  <div class="w-full flex justify-center text-gray-400 mb-10 font-light">
-    ©2022 公司名稱 版權所有
+  <div
+    class="w-full flex justify-center text-gray-400 mb-10 font-light text-[12px]"
+  >
+    ©2024 Tin Bok (HK) Limited.
   </div>
 </template>
 
