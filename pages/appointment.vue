@@ -152,6 +152,21 @@ async function onSubmit(event: FormSubmitEvent<any>) {
     }
   }
 
+  let json = {
+    surname: state.surname,
+    firstName: state.firstName,
+    email: state.email,
+    telephone: state.telephone,
+    serviceTypeId: state.serviceTypeId,
+    serviceTypeName: state.serviceTypeName,
+    caseDate: state.caseDate,
+    consultDate: state.consultDate,
+    consultTime: state.consultTime,
+    describeInfo: state.describeInfo,
+  }
+
+  console.log(JSON.stringify(json))
+
   const stateRes: any = await $fetch<CustomRes>(
     `/sys/appointment_record_info`,
     {
@@ -166,18 +181,7 @@ async function onSubmit(event: FormSubmitEvent<any>) {
         }
         options.headers = headers
       },
-      body: {
-        surname: state.surname,
-        firstName: state.firstName,
-        email: state.email,
-        telephone: state.telephone,
-        serviceTypeId: state.serviceTypeId,
-        serviceTypeName: state.serviceTypeName,
-        caseDate: state.caseDate,
-        consultDate: state.consultDate,
-        consultTime: state.consultTime,
-        describeInfo: state.describeInfo,
-      },
+      body: json,
     }
   )
   if (stateRes.code === 0) {
