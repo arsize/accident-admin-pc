@@ -133,9 +133,9 @@ async function onSubmit(event: FormSubmitEvent<any>) {
 
   // 日期时间
   if (state.caseDate) {
-    state.caseDate = `${
+    state.caseDate = `${state.caseDate.getDate()}/${
       state.caseDate.getMonth() + 1
-    }/${state.caseDate.getDate()}/${state.caseDate.getFullYear()}`
+    }/${state.caseDate.getFullYear()}`
   }
 
   // 预约时间

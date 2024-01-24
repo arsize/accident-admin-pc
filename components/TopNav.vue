@@ -120,7 +120,7 @@ const goout = () => {
             </template>
           </UPopover>
         </div>
-        <div @click="login" v-else>
+        <div class="cursor-pointer" @click="login" v-else>
           {{ $t("LogInAndRegister") }}
         </div>
         <!-- 
