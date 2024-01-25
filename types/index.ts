@@ -32,6 +32,7 @@ export interface SlideItem {
   legalKnowledgeType?: number
   pictureUrl?: string
   title?: string
+  introduction?: string
 }
 
 export interface ServiceType {

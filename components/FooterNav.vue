@@ -49,7 +49,7 @@ const openurl = (type) => {
             src="~/assets/images/image-11.png"
             alt=""
           />
-          <div>6775 5327</div>
+          <div>52146268</div>
         </div>
         <div class="flex items-center">
           <img

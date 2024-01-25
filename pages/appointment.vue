@@ -14,7 +14,7 @@ const runtimeConfig = useRuntimeConfig()
 const msg = inject<(text?: string, type?: MsgEnum) => void>("message")
 
 useHead({
-  title: "预约諮詢-交通意外傷亡及工業傷亡支援中心",
+  title: "預約諮詢-交通意外傷亡及工業傷亡支援中心",
   meta: [],
   bodyAttrs: {},
   script: [],

@@ -105,7 +105,7 @@ const goout = () => {
           <UPopover>
             <div class="flex items-center">
               <div class="mr-2 cursor-pointer">
-                {{ `你好,${store.userInfo?.firstName}先生` }}
+                {{ `你好,${store.userInfo?.firstName}` }}
               </div>
               <Icon name="i-heroicons-chevron-down-20-solid">j</Icon>
             </div>
