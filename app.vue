@@ -12,6 +12,7 @@ provide("message", (msg: string, type: MsgEnum) => {
 
 <template>
   <NuxtLayout id="layout-box">
+    <CustomLoadingIndicator />
     <NuxtPage />
   </NuxtLayout>
   <global-msg ref="n" />

@@ -38,13 +38,9 @@ const state = reactive<{
 const timeOptions = ref<any>([])
 const getDic = async () => {
   let _temp = ""
-  console.log("xxxxxxxxxxxxxxxxxxxx", state.consultDate)
+  timeOptions.value = []
+  state.consultTime = []
   if (state.consultDate) {
-    if (typeof state.consultDate === "string") {
-      if (state.consultDate.includes("/")) {
-        return
-      }
-    }
     let day = state.consultDate.getDate()
     let mon = state.consultDate.getMonth() + 1
     let ye = state.consultDate.getFullYear()
@@ -143,8 +139,6 @@ async function onSubmit(event: FormSubmitEvent<any>) {
     if (state.consultTime?.length == 1) {
       state.consultTime = timeOptions.value[state.consultTime[0]].times
     } else if (state.consultTime?.length == 2) {
-      console.log("hello", timeOptions.value)
-      console.log("ui", state.consultTime)
       state.consultTime =
         timeOptions.value[state.consultTime[0]].times +
         "," +
@@ -184,6 +178,7 @@ async function onSubmit(event: FormSubmitEvent<any>) {
       body: json,
     }
   )
+
   if (stateRes.code === 0) {
     if (msg) {
       msg("预约成功", "success")
@@ -196,7 +191,6 @@ async function onSubmit(event: FormSubmitEvent<any>) {
       msg(stateRes.msg, "warning")
     }
   }
-  // console.log("stateRes", stateRes)
 }
 
 // 选择日期
