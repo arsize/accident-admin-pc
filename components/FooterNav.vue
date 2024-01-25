@@ -39,7 +39,7 @@ const openurl = (type) => {
         <NuxtLink to="/legal" class="cursor-pointer">法律小知識</NuxtLink>
         <NuxtLink to="/about" class="cursor-pointer">關於中心</NuxtLink>
         <NuxtLink to="/contact" class="cursor-pointer">聯絡我們</NuxtLink>
-        <NuxtLink to="/" class="cursor-pointer">隱私條款</NuxtLink>
+        <NuxtLink to="/negotiate" class="cursor-pointer">隱私條款</NuxtLink>
       </div>
       <div class="pt-5 pb-5 flex flex-col justify-between">
         <div class="font-medium">聯絡資料</div>
