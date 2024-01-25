@@ -83,7 +83,7 @@ onMounted(() => {
             <img class="w-full" :src="slide.pictureUrl" alt="" />
             <div class="sub-text p-5">
               <div class="text-lg font-bold mb-5">{{ slide.title }}</div>
-              <div class="textOVerThree" v-html="slide.content"></div>
+              <div class="textOVerThree">{{ slide.introduction }}...</div>
             </div>
           </div>
         </NuxtLink>
