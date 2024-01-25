@@ -3,6 +3,12 @@ import type { CustomRes } from "@/types"
 const runtimeConfig = useRuntimeConfig()
 const route = useRoute()
 
+useHead({
+  title: "法律小知識-交通意外傷亡及工業傷亡支援中心",
+  meta: [],
+  bodyAttrs: {},
+  script: [],
+})
 const ledgeObj = ref()
 const titleKeys = ref<string[]>([])
 const getLegalKnowledge = async () => {
