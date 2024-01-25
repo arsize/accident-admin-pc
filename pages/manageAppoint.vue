@@ -263,6 +263,7 @@ onMounted(() => {
                   </div>
                   <div>
                     <div class="text-[#8294BA] text-sm mb-[5px]">諮詢時間:</div>
+                    <div class="text-md">{{ detailData.consultDate }}</div>
                     <div class="text-md">{{ detailData.consultTime }}</div>
                   </div>
                 </div>

@@ -15,7 +15,7 @@ const emit = defineEmits(["update:showLoginPanel"])
 const hideDialog = () => {
   emit("update:showLoginPanel", false)
 }
-
+const selectedNegotiate = ref(false)
 // 登入
 const loginState = reactive({
   email: undefined,
@@ -93,24 +93,30 @@ const validateRegister = (state: any): FormError[] => {
   }
   return errors
 }
+const toRead = () => {
+  window.open(location.href + "negotiate")
+}
 const onRegister = async () => {
-  const { data } = await useFetch<CustomRes>(`/sys/user/register`, {
-    baseURL: runtimeConfig.public.apiBase,
-    method: "POST",
-    body: {
-      surname: registerState.surname,
-      firstName: registerState.firstName,
-      email: registerState.email,
-      mobile: registerState.mobile,
-      password: registerState.password,
-    },
-  })
-  console.log("data.value?.code", data.value?.code)
-  if (data.value?.code !== 0) {
-    if (msg) msg(data.value?.msg, "warning")
+  if (selectedNegotiate.value) {
+    const { data } = await useFetch<CustomRes>(`/sys/user/register`, {
+      baseURL: runtimeConfig.public.apiBase,
+      method: "POST",
+      body: {
+        surname: registerState.surname,
+        firstName: registerState.firstName,
+        email: registerState.email,
+        mobile: registerState.mobile,
+        password: registerState.password,
+      },
+    })
+    if (data.value?.code !== 0) {
+      if (msg) msg(data.value?.msg, "warning")
+    } else {
+      if (msg) msg(data.value?.msg, "success")
+      hideDialog()
+    }
   } else {
-    if (msg) msg(data.value?.msg, "success")
-    hideDialog()
+    if (msg) msg("請閱讀用戶隱私協議", "warning")
   }
 }
 </script>
@@ -247,6 +253,18 @@ const onRegister = async () => {
                   type="password"
                 />
               </UFormGroup>
+              <div class="flex items-center mt-3">
+                <UCheckbox v-model="selectedNegotiate" name="negotiate">
+                  <template #label>
+                    <div class="text-gray-500 cursor-pointer flex items-center">
+                      <div>已閱讀</div>
+                      <div @click="toRead" class="text-custom-blue">
+                        《用戶隱私協議》
+                      </div>
+                    </div>
+                  </template>
+                </UCheckbox>
+              </div>
 
               <UButton
                 type="submit"
