@@ -3,7 +3,12 @@ import type { CustomRes } from "@/types"
 import { useStore } from "~/store"
 import { useRouter } from "vue-router"
 import type { MsgEnum } from "@/app.vue"
-
+useHead({
+  title: "預約記錄-交通意外傷亡及工業傷亡支援中心",
+  meta: [],
+  bodyAttrs: {},
+  script: [],
+})
 const store = useStore()
 const router = useRouter()
 const msg = inject<(text?: string, type?: MsgEnum) => void>("message")
