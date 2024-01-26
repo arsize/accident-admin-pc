@@ -30,10 +30,10 @@ onMounted(() => {
       class="2xl:w-[800px] w-[800px] mx-auto mt-20 text-xl font-light tracking-widest"
     >
       <div>
-        如你需要尋求交通意外傷亡或工業傷亡相關的法律支援，可透過<span
+        如需要尋求交通意外傷亡或工業傷亡相關的法律支援，可透過<span
           class="text-custom-blue font-medium"
           >電話，Whatsapp及電郵</span
-        >等方式聯絡我們，亦可于網站內直接預約諮詢，當我方接受到你的預約訊息時，會立即聯絡你及確認預約詳情。
+        >等方式聯絡我們，亦可於網站內直接預約資詢，當我們收到你的預約訊息時，會立即聯絡你及確認預約詳情。
       </div>
       <NuxtLink
         to="/appointment"

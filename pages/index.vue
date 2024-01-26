@@ -60,7 +60,7 @@ getLegalKnowledge()
           工業傷亡支援中心
         </div>
         <div class="pt-5 2xl:text-2xl text-xl text-gray-400">
-          專門為意外受害人士提供法律諮詢服務
+          專門為意外受害人士提供諮詢服務
         </div>
         <NuxtLink
           to="/appointment"
@@ -96,31 +96,32 @@ getLegalKnowledge()
     <div class="flex justify-between container mx-auto">
       <NuxtLink
         :to="{ path: '/service', query: { type: 2 } }"
-        class="w-[48%] h-80 sm:h-[350px] border border-slate-300 rounded-xl p-6 cursor-pointer"
+        class="w-[48%] mb-5 border border-slate-300 rounded-xl p-6 cursor-pointer"
       >
         <div class="flex items-center">
           <img class="w-20 h-20 mr-5" src="~/assets/images/car.png" alt="" />
           <div class="text-xl">交通意外傷亡支援</div>
         </div>
         <div class="mt-5 text-gray-500 font-normal">
-          專為交通意外傷者及其家人提供法律支援服務，以幫助他們瞭解自己在交通意外中的法律權益，以及應該如何處理此類意外的注意事項和步驟。
+          專為交通意外傷者及其家人提供法律支援服務，幫助他們瞭解自己在交通意外中的法律權益，以及應該如何處理此類意外的步驟和注意事項。
           <div class="mt-1">
-            此外，我們還提供一些小貼士和建議，以幫助受傷者更好地應對交通意外並保障自己的權益。另一方面，我們還提供關於政府的交通意外賠付計劃的介紹，讓傷者可從多方面了解自己可能可以獲得的援助。此外，我們還提供專業分析和建議，以幫助受傷者選擇合適的解決方案。
+            此外，我們還提供一些小貼士和建議，以幫助受傷者更有效地應對交通意外並保障自己的權益。另一方面，我們亦會協助傷者了解政府的交通意外賠償計劃資訊，讓傷者可從多方面了解自己可能獲得的援助。透過我們的專業分析和建議，
+            能夠幫助傷者選擇合適的解決方案。
           </div>
         </div>
       </NuxtLink>
 
       <NuxtLink
         :to="{ path: '/service', query: { type: 3 } }"
-        class="w-[48%] h-80 sm:h-[350px] border border-slate-300 rounded-xl p-6 cursor-pointer"
+        class="w-[48%] mb-5 border border-slate-300 rounded-xl p-6 cursor-pointer"
       >
         <div class="flex items-center">
           <img class="w-20 h-20 mr-5" src="~/assets/images/hat.png" alt="" />
           <div class="text-xl">工業傷亡支援</div>
         </div>
         <div class="mt-5 text-gray-500 font-normal">
-          專為工傷意外傷者及家人提供相關的法律權益、法律程序以及應該注意的事項和一些小貼士。另外，我們也提供了法律援助署的簡介，
-          以及作出專業分析協助工傷受害者尋找合適的法律專業人士並提供支援。
+          專為工傷意外傷者及家人提供相關的法律權益、法律程序以及應該注意的事項和一些小貼士。我們亦可以協助傷者了解法律援助署所提供的法律服務，
+          幫助工傷受害者分析如何尋找合適的法律專業人士並提供支援。
         </div>
       </NuxtLink>
     </div>

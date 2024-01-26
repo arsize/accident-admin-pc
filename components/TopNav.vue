@@ -107,7 +107,7 @@ const goout = () => {
               <div class="mr-2 cursor-pointer">
                 {{ `你好, ${store.userInfo?.realName}` }}
               </div>
-              <Icon name="i-heroicons-chevron-down-20-solid">j</Icon>
+              <Icon name="i-heroicons-chevron-down-20-solid"></Icon>
             </div>
 
             <template #panel>

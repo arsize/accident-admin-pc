@@ -389,6 +389,7 @@ onMounted(() => {
                       v-model="state.serviceTypeId"
                       :options="serviceTypeOptions"
                       option-attribute="name"
+                      placeholder="選擇項目"
                     />
                   </UFormGroup>
                 </div>
@@ -415,6 +416,7 @@ onMounted(() => {
                       :options="timeOptions"
                       value-attribute="id"
                       option-attribute="times"
+                      placeholder="選擇時段"
                     >
                       <template #empty> 无数据 </template></USelectMenu
                     >

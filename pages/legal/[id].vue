@@ -73,6 +73,30 @@ onMounted(() => {
                 {{ item.title }}</NuxtLink
               >
             </div>
+            <NuxtLink
+              to="/legal?type=2"
+              v-if="k == '交通意外'"
+              class="readmore text-custom-blue text-sm cursor-pointer w-full flex justify-end h-10 items-center"
+            >
+              查看更多
+              <Icon name="i-heroicons-chevron-right-20-solid"></Icon>
+            </NuxtLink>
+            <NuxtLink
+              to="/legal?type=3"
+              v-else-if="k == '工業傷亡'"
+              class="readmore text-custom-blue text-sm cursor-pointer w-full flex justify-end h-10 items-center"
+            >
+              查看更多
+              <Icon name="i-heroicons-chevron-right-20-solid"></Icon>
+            </NuxtLink>
+            <NuxtLink
+              to="/legal?type=4"
+              v-else-if="k == '客戶案件分享'"
+              class="readmore text-custom-blue text-sm cursor-pointer w-full flex justify-end h-10 items-center"
+            >
+              查看更多
+              <Icon name="i-heroicons-chevron-right-20-solid"></Icon>
+            </NuxtLink>
           </div>
         </div>
       </div>
@@ -81,7 +105,7 @@ onMounted(() => {
           <div class="text-2xl font-semibold">
             {{ contentObj.title }}
           </div>
-          <div class="h-[80px] flex justify-between items-center">
+          <div class="h-[80px] text-sm flex justify-between items-center">
             <div
               class="text-[#FFAD5A]"
               v-if="contentObj.legalKnowledgeType == 2"
@@ -117,7 +141,7 @@ onMounted(() => {
         </div>
       </div>
       <div class="right w-[20%]">
-        <div class="mb-5 text-[#ACACAC]">內容概括</div>
+        <div class="mb-5 text-sm text-[#ACACAC]">內容概括</div>
         <div v-if="contentObj">
           <div v-html="contentObj.summary"></div>
         </div>
@@ -144,5 +168,9 @@ onMounted(() => {
     border-radius: 0 0 50% 50%;
     background-color: #fffcf2;
   }
+}
+.readmore {
+  display: flex;
+  align-items: center;
 }
 </style>

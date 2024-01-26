@@ -288,7 +288,7 @@ onMounted(() => {
             <div class="w-[30%] flex items-center">
               <UInput
                 v-model="searchVal"
-                placeholder="搜寻"
+                placeholder="搜尋"
                 :ui="{ icon: { trailing: { pointer: '' } } }"
               >
                 <template #trailing>
