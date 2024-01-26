@@ -78,6 +78,25 @@ onMounted(() => {
       </div>
       <div class="content w-[50%]">
         <div class="w-full" v-if="contentObj">
+          <div class="text-2xl font-semibold">
+            {{ contentObj.title }}
+          </div>
+          <div class="h-[80px] flex justify-between items-center">
+            <div
+              class="text-[#FFAD5A]"
+              v-if="contentObj.legalKnowledgeType == 2"
+            >
+              交通意外
+            </div>
+            <div
+              class="text-[#FFAD5A]"
+              v-else-if="contentObj.legalKnowledgeType == 3"
+            >
+              工業傷亡
+            </div>
+            <div v-else></div>
+            <div class="text-gray-400">{{ contentObj.publishDate }}</div>
+          </div>
           <div v-html="contentObj.content"></div>
           <div
             v-if="contentObj?.extendedArticles"

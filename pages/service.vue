@@ -127,21 +127,21 @@ onMounted(() => {
         </div>
       </div>
       <div class="w-[50%]">
-        <div>
+        <div class="flex items-center mb-5">
+          <img
+            class="w-[80px] h-[80px] mr-5"
+            v-if="contentMd.serviceScopeType == 2"
+            src="@/assets/images/car.png"
+            alt=""
+          />
+          <img
+            class="w-[80px] h-[80px] mr-5"
+            v-else-if="contentMd.serviceScopeType == 3"
+            src="@/assets/images/hat.png"
+            alt=""
+          />
+
           <div class="text-2xl font-semibold">{{ contentMd.title }}</div>
-          <div class="h-[80px] flex justify-between items-center">
-            <div class="text-[#FFAD5A]" v-if="contentMd.serviceScopeType == 2">
-              交通意外
-            </div>
-            <div
-              class="text-[#FFAD5A]"
-              v-else-if="contentMd.serviceScopeType == 3"
-            >
-              工業傷亡
-            </div>
-            <div v-else></div>
-            <div class="text-gray-400">{{ contentMd.publishDate }}</div>
-          </div>
         </div>
         <div v-if="contentMd" v-html="contentMd.content"></div>
         <div
