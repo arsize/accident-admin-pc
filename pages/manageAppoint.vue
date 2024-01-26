@@ -94,6 +94,15 @@ const onRename = async () => {
     },
   })
   if (res.code === 0) {
+    if (store.userInfo) {
+      store.userInfo.surname = renameState.surname
+      store.userInfo.firstName = renameState.firstName
+      store.userInfo.mobile = renameState.mobile
+      store.userInfo.email = renameState.email
+      store.userInfo.realName = renameState.firstName + renameState.surname
+    }
+    renameopen.value = false
+    if (msg) msg("修改成功", "success")
   } else {
     if (msg) msg(res.msg, "warning")
   }
