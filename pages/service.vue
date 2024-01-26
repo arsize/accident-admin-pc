@@ -127,6 +127,22 @@ onMounted(() => {
         </div>
       </div>
       <div class="w-[50%]">
+        <div>
+          <div class="text-2xl font-semibold">{{ contentMd.title }}</div>
+          <div class="h-[80px] flex justify-between items-center">
+            <div class="text-[#FFAD5A]" v-if="contentMd.serviceScopeType == 2">
+              交通意外
+            </div>
+            <div
+              class="text-[#FFAD5A]"
+              v-else-if="contentMd.serviceScopeType == 3"
+            >
+              工業傷亡
+            </div>
+            <div v-else></div>
+            <div class="text-gray-400">{{ contentMd.publishDate }}</div>
+          </div>
+        </div>
         <div v-if="contentMd" v-html="contentMd.content"></div>
         <div
           v-if="contentMd?.extendedArticles"
@@ -145,7 +161,12 @@ onMounted(() => {
           </ul>
         </div>
       </div>
-      <div class="w-[20%]" v-html="contentMd.summary"></div>
+      <div class="w-[20%]">
+        <div class="mb-5 text-[#ACACAC]">內容概括</div>
+        <div v-if="contentMd">
+          <div v-html="contentMd.summary"></div>
+        </div>
+      </div>
     </div>
   </div>
 </template>

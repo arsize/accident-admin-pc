@@ -98,7 +98,7 @@ onMounted(() => {
         </div>
       </div>
       <div class="right w-[20%]">
-        <div class="mb-5">內容概括</div>
+        <div class="mb-5 text-[#ACACAC]">內容概括</div>
         <div v-if="contentObj">
           <div v-html="contentObj.summary"></div>
         </div>

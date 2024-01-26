@@ -51,6 +51,9 @@ export interface RelevantLaws {
 export interface ContentMd {
   content?: string
   summary?: string
+  title?: string
+  publishDate?: string
+  serviceScopeType?: number
   extendedArticles?: extendedArticlesList[]
 }
 

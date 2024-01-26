@@ -69,7 +69,7 @@ getLegalKnowledge()
           預約諮詢服務
         </NuxtLink>
         <img
-          class="w-96 2xl:w-1/3 xl:w-2/5 absolute top-20 right-0"
+          class="w-96 2xl:w-1/3 xl:w-1/3 absolute top-20 right-0"
           src="~/assets/images/people.png"
           alt=""
         />
@@ -141,7 +141,7 @@ getLegalKnowledge()
         </div>
       </div>
     </div>
-    <div class="container mx-auto mt-14">
+    <div class="container mx-auto mt-14" v-if="currentShowList?.length > 0">
       <Swiper
         :modules="[SwiperAutoplay]"
         :spaceBetween="30"
