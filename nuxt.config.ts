@@ -77,9 +77,7 @@ export default defineNuxtConfig({
     defaultLocale: "cn",
     vueI18n: "./i18n.config.ts",
   },
-  swiper: {
-    modules: ["navigation", "pagination", "effect-creative", "autoplay"],
-  },
+  swiper: {},
   plugins: [
     // 在plugins中封装百度 谷歌 等统计脚本，可在次引入
   ],

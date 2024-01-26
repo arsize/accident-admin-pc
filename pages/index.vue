@@ -36,10 +36,18 @@ const scrollToHash = () => {
   })
 }
 
+// 轮播
+let mySwiper: any = null
 const slideSwiper = (type: string) => {
   if (type === "next") {
+    mySwiper.slideNext()
   } else {
+    mySwiper.slidePrev()
   }
+}
+
+const onSwiper = (swiper: any) => {
+  mySwiper = swiper
 }
 
 getLegalKnowledge()
@@ -144,14 +152,16 @@ getLegalKnowledge()
     </div>
     <div class="container mx-auto mt-14" v-if="currentShowList?.length > 0">
       <Swiper
-        :modules="[SwiperAutoplay]"
+        ref="mySwiperRef"
+        :modules="[SwiperAutoplay, SwiperNavigation, SwiperPagination]"
         :spaceBetween="30"
         :loop="true"
+        @swiper="onSwiper"
         :autoplay="{
           delay: 5000,
           disableOnInteraction: true,
         }"
-        :pagination="{ clickable: true }"
+        :pagination="{ clickable: true, el: '.swiper-pagination-box' }"
         :slides-per-view="3"
       >
         <SwiperSlide class="shadow-md" v-for="slide in currentShowList">
@@ -167,24 +177,19 @@ getLegalKnowledge()
         </SwiperSlide>
       </Swiper>
       <div
-        v-if="currentShowList.length > 3 && false"
+        v-if="currentShowList.length > 3"
         class="flex justify-between h-24 items-center"
       >
         <img
           @click="slideSwiper('pre')"
-          class="cursor-pointer w-[60px]"
+          class="swiper-button-prev-box cursor-pointer w-[60px]"
           src="~/assets/images/04.jpg"
           alt=""
         />
-        <div class="flex">
-          <div class="w-3 h-3 border rounded-full bg-black mr-5"></div>
-          <div class="w-3 h-3 border rounded-full bg-gray-400 mr-5"></div>
-          <div class="w-3 h-3 border rounded-full bg-gray-400 mr-5"></div>
-          <div class="w-3 h-3 border rounded-full bg-gray-400"></div>
-        </div>
+        <div class="swiper-pagination-box"></div>
         <img
           @click="slideSwiper('next')"
-          class="cursor-pointer w-[60px]"
+          class="swiper-button-next-box cursor-pointer w-[60px]"
           src="~/assets/images/03.jpg"
           alt=""
         />
@@ -232,7 +237,10 @@ getLegalKnowledge()
     margin-right: 0;
   }
 }
-
+.swiper-pagination-box {
+  display: flex;
+  justify-content: center;
+}
 .active {
   background-color: #fcb04c;
 }

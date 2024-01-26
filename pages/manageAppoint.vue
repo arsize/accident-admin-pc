@@ -3,11 +3,21 @@ import type { CustomRes } from "@/types"
 import { useStore } from "~/store"
 import { useRouter } from "vue-router"
 import type { MsgEnum } from "@/app.vue"
+import VueDatePicker from "@vuepic/vue-datepicker"
+import "@vuepic/vue-datepicker/dist/main.css"
+
 useHead({
   title: "預約記錄-交通意外傷亡及工業傷亡支援中心",
   meta: [],
   bodyAttrs: {},
   script: [],
+})
+const renameState = reactive<any>({
+  mobile: undefined,
+  email: undefined,
+  firstName: undefined,
+  surname: undefined,
+  id: undefined,
 })
 const store = useStore()
 const router = useRouter()
@@ -49,8 +59,44 @@ const columns = [
 
 // 删除账户
 const delisopen = ref(false)
+const renameopen = ref(false)
 const dels = () => {
   delisopen.value = true
+}
+const rename = () => {
+  renameState.email = store.userInfo?.email ?? ""
+  renameState.firstName = store.userInfo?.firstName
+  renameState.surname = store.userInfo?.surname
+  renameState.mobile = store.userInfo?.mobile
+  renameState.id = store.userInfo?.id
+
+  renameopen.value = true
+}
+const onRename = async () => {
+  const res = await $fetch<CustomRes>(`/sys/user`, {
+    baseURL: runtimeConfig.public.apiBase,
+    method: "put",
+    body: {
+      surname: renameState.surname,
+      firstName: renameState.firstName,
+      mobile: renameState.mobile,
+      email: renameState.email,
+      id: renameState.id,
+    },
+    onRequest({ request, options }) {
+      const headers = options?.headers
+        ? new Headers(options.headers)
+        : new Headers()
+      if (!headers.has("Authorization")) {
+        headers.set("Authorization", store.token)
+      }
+      options.headers = headers
+    },
+  })
+  if (res.code === 0) {
+  } else {
+    if (msg) msg(res.msg, "warning")
+  }
 }
 const confirmDel = async () => {
   const res = await $fetch<CustomRes>(`/sys/user/deleteAccount`, {
@@ -78,7 +124,7 @@ const confirmDel = async () => {
 const table = ref([])
 const current = ref(1)
 const total = ref(10)
-const searchVal = ref("")
+const searchVal: any = ref("")
 const getData = async () => {
   let query: any = {
     page: current.value,
@@ -88,7 +134,14 @@ const getData = async () => {
     query.appointmentCode = searchVal.value
   }
   if (selectedTabIndex.value === 1) {
-    query.createDate = searchVal.value
+    let _temp = ""
+    if (searchVal.value) {
+      let day = searchVal.value.getDate()
+      let mon = searchVal.value.getMonth() + 1
+      let ye = searchVal.value.getFullYear()
+      _temp = `${day}/${mon}/${ye}`
+    }
+    query.createDate = _temp
   }
   const res = await $fetch<CustomRes>(`/sys/appointment_record_info/page`, {
     baseURL: runtimeConfig.public.apiBase,
@@ -119,6 +172,12 @@ const refrsh = () => {
   searchVal.value = ""
   getData()
 }
+const formatDefault = (date: any) => {
+  const day = date.getDate()
+  const month = date.getMonth() + 1
+  const year = date.getFullYear()
+  return `${day}/${month}/${year}`
+}
 // 查询详情
 const detailData: any = ref(null)
 const getDetailData = async (id: number) => {
@@ -146,6 +205,7 @@ const goback = () => {
 }
 const hideDialog = () => {
   delisopen.value = false
+  renameopen.value = false
 }
 const printPage = () => {
   window.print()
@@ -285,8 +345,9 @@ onMounted(() => {
         <div v-else class="w-[100%]">
           <div class="text-2xl font-bold">預約記錄</div>
           <div class="w-full mt-10 flex justify-between">
-            <div class="w-[30%] flex items-center">
+            <div class="w-[40%] flex items-center">
               <UInput
+                v-if="selectedTabIndex == 0"
                 v-model="searchVal"
                 placeholder="搜尋"
                 :ui="{ icon: { trailing: { pointer: '' } } }"
@@ -303,6 +364,26 @@ onMounted(() => {
                   />
                 </template>
               </UInput>
+              <VueDatePicker
+                v-else
+                :format="formatDefault"
+                v-model="searchVal"
+                placeholder="選擇日期"
+                :enable-time-picker="false"
+                locale="cn"
+                cancel-text="close"
+                select-text="select"
+              ></VueDatePicker>
+              <UButton
+                v-show="true"
+                color="gray"
+                class="hover:text-white cursor-pointer bg-blue-400 px-3 py-2 text-sm text-white ml-5"
+                variant="link"
+                icon="i-heroicons-magnifying-glass-20-solid"
+                :padded="false"
+                @click="getData"
+                >查詢</UButton
+              >
               <UButton
                 v-show="true"
                 color="gray"
@@ -393,6 +474,7 @@ onMounted(() => {
             class="w-full text-center flex items-center justify-center mt-10"
           >
             <div
+              @click="rename"
               class="py-2 text-sm px-3 border rounded-lg cursor-pointer mr-5"
             >
               修改帳戶
@@ -430,7 +512,63 @@ onMounted(() => {
         </div>
       </div>
     </div>
+    <div
+      v-if="renameopen"
+      class="absolute z-40 2xl:w-[500px] w-[400px] rounded-xl top-[40%] left-[50%] translate-x-[-50%] translate-y-[-50%] bg-white p-5 px-10 box-border"
+    >
+      <div class="text-xl mb-5">更改帳戶資料</div>
+      <div class="font-normal">
+        <UForm :state="renameState" class="my-3">
+          <UFormGroup class="2xl:mb-5 mb-3">
+            <template #label>
+              <div class="text-gray-500 font-normal mb-2 inline-block">
+                你的姓名
+              </div>
+            </template>
+            <div class="flex items-center justify-between">
+              <UInput
+                class="w-[49%]"
+                placeholder="姓"
+                v-model="renameState.firstName"
+              />
+              <UInput
+                class="w-[49%]"
+                placeholder="名"
+                v-model="renameState.surname"
+              />
+            </div>
+          </UFormGroup>
+          <UFormGroup name="mobile" class="2xl:mb-5 mb-3">
+            <template #label>
+              <div class="text-gray-500 font-normal mb-2 inline-block">
+                聯絡電話
+              </div>
+            </template>
+            <UInput placeholder="請輸入電話" v-model="renameState.mobile" />
+          </UFormGroup>
+
+          <UFormGroup name="email">
+            <template #label>
+              <div class="text-gray-500 font-normal mb-2 inline-block">
+                電郵地址
+              </div>
+            </template>
+            <UInput placeholder="請輸入電郵地址" v-model="renameState.email" />
+          </UFormGroup>
+        </UForm>
+      </div>
+      <div class="w-[100%] mx-auto flex justify-between mt-5">
+        <div></div>
+        <UButton
+          @click="onRename"
+          class="py-2 px-10 cursor-pointer flex justify-center items-center rounded-full"
+        >
+          確認
+        </UButton>
+      </div>
+    </div>
     <div v-if="delisopen" class="mask" @click="hideDialog"></div>
+    <div v-if="renameopen" class="mask" @click="hideDialog"></div>
   </div>
 </template>
 
