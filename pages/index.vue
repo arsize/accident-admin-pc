@@ -177,7 +177,7 @@ getLegalKnowledge()
         </SwiperSlide>
       </Swiper>
       <div
-        v-if="currentShowList.length > 3"
+        v-show="currentShowList.length > 3"
         class="flex justify-between h-24 items-center"
       >
         <img
