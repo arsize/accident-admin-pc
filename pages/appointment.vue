@@ -135,14 +135,28 @@ async function onSubmit(event: FormSubmitEvent<any>) {
   }
 
   // 预约时间
+  console.log("xxxxxxxxxxxxxxxxx", state.consultTime)
+  console.log("yyyyyyyyyy", state.consultTime.length)
   if (state.consultTime?.length > 0) {
     if (state.consultTime?.length == 1) {
-      state.consultTime = timeOptions.value[state.consultTime[0]].times
+      timeOptions.value.map((k: any) => {
+        if (k.id == state.consultTime[0]) {
+          state.consultTime = k.times
+        }
+      })
     } else if (state.consultTime?.length == 2) {
-      state.consultTime =
-        timeOptions.value[state.consultTime[0]].times +
-        "," +
-        timeOptions.value[state.consultTime[1]].times
+      let _result = ""
+      timeOptions.value.map((k: any) => {
+        if (k.id == state.consultTime[0]) {
+          _result = k.times
+        }
+      })
+      timeOptions.value.map((k: any) => {
+        if (k.id == state.consultTime[1]) {
+          _result = _result + "," + k.times
+        }
+      })
+      state.consultTime = _result
     }
   }
 
