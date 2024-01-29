@@ -137,7 +137,7 @@ const searchVal: any = ref("")
 const getData = async () => {
   let query: any = {
     page: current.value,
-    limit: 10,
+    limit: 100,
   }
   if (selectedTabIndex.value === 0) {
     query.appointmentCode = searchVal.value
