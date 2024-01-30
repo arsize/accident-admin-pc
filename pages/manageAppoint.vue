@@ -220,7 +220,8 @@ const printPage = () => {
   window.print()
 }
 // 修改
-const editState = reactive<any>({
+const disabledTime = ref(true)
+const editState = ref<any>({
   id: "",
   serviceTypeName: "",
   serviceTypeId: "",
@@ -231,13 +232,14 @@ const editState = reactive<any>({
 })
 const isEditOpen = ref(false)
 const showMod = async () => {
-  getServiceOptions()
-  editState.id = detailData.value.id
-  editState.serviceTypeName = detailData.value.serviceTypeName
-  editState.serviceTypeId = detailData.value.serviceTypeId
-  editState.consultDate = detailData.value.consultDate
-  editState.caseDate = detailData.value.caseDate
-  editState.describeInfo = detailData.value.describeInfo
+  timeOptions.value = []
+  await getServiceOptions()
+  editState.value.id = detailData.value.id
+  editState.value.serviceTypeName = detailData.value.serviceTypeName
+  editState.value.serviceTypeId = detailData.value.serviceTypeId
+  editState.value.consultDate = detailData.value.consultDate
+  editState.value.caseDate = detailData.value.caseDate
+  editState.value.describeInfo = detailData.value.describeInfo
 
   let _temps: any = []
   if (detailData.value.consultTime.includes(",")) {
@@ -246,16 +248,17 @@ const showMod = async () => {
     _temps.push(detailData.value.consultTime)
   }
   await getDic()
-  console.log("_temps", _temps)
-  console.log("timeOptions", timeOptions.value)
+
   timeOptions.value.map((k: any) => {
     if (_temps.includes(k.times)) {
-      editState.consultTime.push({
-        id: k.id,
-        times: k.times,
-      })
+      editState.value.consultTime.push(k.id)
+    } else {
     }
   })
+  disabledTime.value = false
+
+  console.log("editStateuuu", editState.value.consultTime)
+  console.log("timeOptions", timeOptions.value)
 
   isEditOpen.value = true
 }
@@ -283,41 +286,44 @@ const allowedDates = computed(() => {
 
 const onEdit = async () => {
   // 预约时间
-  if (editState.consultTime?.length <= 0) {
+  if (editState.value.consultTime?.length <= 0) {
     if (msg) msg("請填寫預約時間段", "warning")
     return
   }
-  if (editState.consultTime?.length > 0) {
-    if (editState.consultTime?.length == 1) {
+  if (editState.value.consultTime?.length > 0) {
+    if (editState.value.consultTime?.length == 1) {
       timeOptions.value.map((k: any) => {
-        if (k.id == editState.consultTime[0]) {
-          editState.consultTime = k.times
+        if (k.id == editState.value.consultTime[0]) {
+          editState.value.consultTime = k.times
         }
       })
-    } else if (editState.consultTime?.length == 2) {
+    } else if (editState.value.consultTime?.length == 2) {
       let _result = ""
       timeOptions.value.map((k: any) => {
-        if (k.id == editState.consultTime[0]) {
+        if (k.id == editState.value.consultTime[0]) {
           _result = k.times
         }
       })
       timeOptions.value.map((k: any) => {
-        if (k.id == editState.consultTime[1]) {
+        if (k.id == editState.value.consultTime[1]) {
           _result = _result + "," + k.times
         }
       })
-      editState.consultTime = _result
+      editState.value.consultTime = _result
+    } else {
+      if (msg) msg("最多只能選擇連續兩段預約時間", "warning")
+      return
     }
   }
 
   let json = {
-    id: editState.id,
-    serviceTypeId: editState.serviceTypeId,
-    serviceTypeName: editState.serviceTypeName,
-    caseDate: editState.caseDate,
-    consultDate: editState.consultDate,
-    consultTime: editState.consultTime,
-    describeInfo: editState.describeInfo,
+    id: editState.value.id,
+    serviceTypeId: editState.value.serviceTypeId,
+    serviceTypeName: editState.value.serviceTypeName,
+    caseDate: editState.value.caseDate,
+    consultDate: editState.value.consultDate,
+    consultTime: editState.value.consultTime,
+    describeInfo: editState.value.describeInfo,
   }
   const stRes: any = await $fetch<CustomRes>(`/sys/appointment_record_info`, {
     baseURL: runtimeConfig.public.apiBase,
@@ -335,12 +341,12 @@ const onEdit = async () => {
   })
   if (stRes.code === 0) {
     if (msg) {
-      detailData.value.serviceTypeName = editState.serviceTypeName
-      detailData.value.serviceTypeId = editState.serviceTypeId
-      detailData.value.consultDate = editState.consultDate
-      detailData.value.caseDate = editState.caseDate
-      detailData.value.describeInfo = editState.describeInfo
-      detailData.value.consultTime = editState.consultTime
+      detailData.value.serviceTypeName = editState.value.serviceTypeName
+      detailData.value.serviceTypeId = editState.value.serviceTypeId
+      detailData.value.consultDate = editState.value.consultDate
+      detailData.value.caseDate = editState.value.caseDate
+      detailData.value.describeInfo = editState.value.describeInfo
+      detailData.value.consultTime = editState.value.consultTime
       msg("修改成功", "success")
       closeEdit()
     }
@@ -351,27 +357,32 @@ const onEdit = async () => {
   }
 }
 const closeEdit = () => {
-  editState.serviceTypeName = ""
-  editState.serviceTypeId = ""
-  editState.consultDate = ""
-  editState.caseDate = ""
-  editState.consultTime = []
-  editState.describeInfo = ""
+  editState.value.serviceTypeName = ""
+  editState.value.serviceTypeId = ""
+  editState.value.consultDate = ""
+  editState.value.caseDate = ""
+  editState.value.consultTime = []
+  editState.value.describeInfo = ""
   isEditOpen.value = false
 }
 const timeOptions = ref<any>([])
 const getDic = async () => {
+  timeOptions.value = []
+  editState.value.consultTime = []
   let _temp = ""
-  if (editState.consultDate && typeof editState.consultDate !== "string") {
-    let day = editState.consultDate.getDate()
-    let mon = editState.consultDate.getMonth() + 1
-    let ye = editState.consultDate.getFullYear()
+  if (
+    editState.value.consultDate &&
+    typeof editState.value.consultDate !== "string"
+  ) {
+    let day = editState.value.consultDate.getDate()
+    let mon = editState.value.consultDate.getMonth() + 1
+    let ye = editState.value.consultDate.getFullYear()
     _temp = `${day}/${mon}/${ye}`
   } else {
-    _temp = editState.consultDate
+    _temp = editState.value.consultDate
   }
-  if (editState.serviceTypeId) {
-    editState.serviceTypeId = parseInt(editState.serviceTypeId)
+  if (editState.value.serviceTypeId) {
+    editState.value.serviceTypeId = parseInt(editState.value.serviceTypeId)
   }
   const res = await $fetch<CustomRes>(
     `/sys/appointment_record_info/queryAvailablePeriods`,
@@ -379,8 +390,9 @@ const getDic = async () => {
       baseURL: runtimeConfig.public.apiBase,
       method: "get",
       query: {
-        serviceTypeId: editState.serviceTypeId,
+        serviceTypeId: editState.value.serviceTypeId,
         consultDate: _temp,
+        appointmentId: detailData.value.id,
       },
       onRequest({ request, options }) {
         const headers = options?.headers
@@ -401,9 +413,9 @@ const getDic = async () => {
 }
 
 watch(
-  () => editState.consultDate,
+  () => editState.value.consultDate,
   (val) => {
-    if (editState.consultDate && editState.serviceTypeId) {
+    if (editState.value.consultDate && editState.value.serviceTypeId) {
       getDic()
     }
   },
@@ -412,9 +424,9 @@ watch(
   }
 )
 watch(
-  () => editState.serviceTypeId,
+  () => editState.value.serviceTypeId,
   (val) => {
-    if (editState.consultDate && editState.serviceTypeId) {
+    if (editState.value.consultDate && editState.value.serviceTypeId) {
       getDic()
     }
   },
@@ -423,32 +435,34 @@ watch(
   }
 )
 watch(
-  () => editState.consultTime,
+  () => editState.value.consultTime,
   (val) => {
-    if (editState.consultTime?.length == 0) {
+    if (editState.value.consultTime?.length == 0) {
       timeOptions.value.map((k: any) => {
         k.disabled = false
       })
     }
-    if (editState.consultTime?.length == 1) {
+    if (editState.value.consultTime?.length == 1) {
       timeOptions.value.map((k: any) => {
         if (
-          !editState.consultTime.includes(k.id) &&
-          k.id != editState.consultTime[0] + 1
+          !editState.value.consultTime.includes(k.id) &&
+          k.id != editState.value.consultTime[0] + 1
         ) {
           k.disabled = true
         }
       })
     }
-    if (editState.consultTime?.length == 2) {
+    if (editState.value.consultTime?.length == 2) {
+      console.log("进来了")
       timeOptions.value.map((k: any) => {
-        if (!editState.consultTime.includes(k.id)) {
+        if (!editState.value.consultTime.includes(k.id)) {
           k.disabled = true
         }
       })
     }
   },
   {
+    immediate: true,
     deep: true,
   }
 )
@@ -562,7 +576,7 @@ onMounted(() => {
                 >
                   <div>諮詢資料</div>
                   <div
-                    v-if="detailData.state == 0"
+                    v-if="detailData && detailData.state == 0"
                     @click="showMod"
                     class="text-sm flex items-center text-[#6EA860] cursor-pointer"
                   >
@@ -884,6 +898,7 @@ onMounted(() => {
           <div class="mt-3 flex justify-between">
             <UFormGroup class="w-[100%]" name="consultTime">
               <USelectMenu
+                :disabled="disabledTime"
                 size="lg"
                 multiple
                 v-model="editState.consultTime"
