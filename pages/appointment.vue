@@ -135,8 +135,6 @@ async function onSubmit(event: FormSubmitEvent<any>) {
   }
 
   // 预约时间
-  console.log("xxxxxxxxxxxxxxxxx", state.consultTime)
-  console.log("yyyyyyyyyy", state.consultTime.length)
   if (state.consultTime?.length > 0) {
     if (state.consultTime?.length == 1) {
       timeOptions.value.map((k: any) => {

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { CustomRes } from "@/types"
+import type { CustomRes, ServiceType } from "@/types"
 import { useStore } from "~/store"
 import { useRouter } from "vue-router"
 import type { MsgEnum } from "@/app.vue"
@@ -219,6 +219,239 @@ const hideDialog = () => {
 const printPage = () => {
   window.print()
 }
+// 修改
+const editState = reactive<any>({
+  id: "",
+  serviceTypeName: "",
+  serviceTypeId: "",
+  consultDate: "",
+  caseDate: "",
+  consultTime: [],
+  describeInfo: "",
+})
+const isEditOpen = ref(false)
+const showMod = async () => {
+  getServiceOptions()
+  editState.id = detailData.value.id
+  editState.serviceTypeName = detailData.value.serviceTypeName
+  editState.serviceTypeId = detailData.value.serviceTypeId
+  editState.consultDate = detailData.value.consultDate
+  editState.caseDate = detailData.value.caseDate
+  editState.describeInfo = detailData.value.describeInfo
+
+  let _temps: any = []
+  if (detailData.value.consultTime.includes(",")) {
+    _temps = detailData.value.consultTime.split(",")
+  } else {
+    _temps.push(detailData.value.consultTime)
+  }
+  await getDic()
+  console.log("_temps", _temps)
+  console.log("timeOptions", timeOptions.value)
+  timeOptions.value.map((k: any) => {
+    if (_temps.includes(k.times)) {
+      editState.consultTime.push({
+        id: k.id,
+        times: k.times,
+      })
+    }
+  })
+
+  isEditOpen.value = true
+}
+// 咨询类型
+const serviceTypeOptions = ref<ServiceType[]>([])
+const getServiceOptions = async () => {
+  const res = await $fetch<CustomRes>(`/sys/service_type_info/list`, {
+    baseURL: runtimeConfig.public.apiBase,
+    method: "get",
+  })
+  if (res.code === 0) {
+    serviceTypeOptions.value = res.data ?? []
+    serviceTypeOptions.value.map((k) => {
+      k.value = k.id
+    })
+  }
+}
+const allowedDates = computed(() => {
+  let allowD = [new Date()]
+  for (let i = 1; i < 300; i++) {
+    allowD.push(new Date(new Date().setDate(new Date().getDate() + i)))
+  }
+  return allowD
+})
+
+const onEdit = async () => {
+  // 预约时间
+  if (editState.consultTime?.length <= 0) {
+    if (msg) msg("請填寫預約時間段", "warning")
+    return
+  }
+  if (editState.consultTime?.length > 0) {
+    if (editState.consultTime?.length == 1) {
+      timeOptions.value.map((k: any) => {
+        if (k.id == editState.consultTime[0]) {
+          editState.consultTime = k.times
+        }
+      })
+    } else if (editState.consultTime?.length == 2) {
+      let _result = ""
+      timeOptions.value.map((k: any) => {
+        if (k.id == editState.consultTime[0]) {
+          _result = k.times
+        }
+      })
+      timeOptions.value.map((k: any) => {
+        if (k.id == editState.consultTime[1]) {
+          _result = _result + "," + k.times
+        }
+      })
+      editState.consultTime = _result
+    }
+  }
+
+  let json = {
+    id: editState.id,
+    serviceTypeId: editState.serviceTypeId,
+    serviceTypeName: editState.serviceTypeName,
+    caseDate: editState.caseDate,
+    consultDate: editState.consultDate,
+    consultTime: editState.consultTime,
+    describeInfo: editState.describeInfo,
+  }
+  const stRes: any = await $fetch<CustomRes>(`/sys/appointment_record_info`, {
+    baseURL: runtimeConfig.public.apiBase,
+    method: "put",
+    onRequest({ request, options }) {
+      const headers = options?.headers
+        ? new Headers(options.headers)
+        : new Headers()
+      if (!headers.has("Authorization")) {
+        headers.set("Authorization", store.token)
+      }
+      options.headers = headers
+    },
+    body: json,
+  })
+  if (stRes.code === 0) {
+    if (msg) {
+      detailData.value.serviceTypeName = editState.serviceTypeName
+      detailData.value.serviceTypeId = editState.serviceTypeId
+      detailData.value.consultDate = editState.consultDate
+      detailData.value.caseDate = editState.caseDate
+      detailData.value.describeInfo = editState.describeInfo
+      detailData.value.consultTime = editState.consultTime
+      msg("修改成功", "success")
+      closeEdit()
+    }
+  } else {
+    if (msg) {
+      msg(stRes.msg, "warning")
+    }
+  }
+}
+const closeEdit = () => {
+  editState.serviceTypeName = ""
+  editState.serviceTypeId = ""
+  editState.consultDate = ""
+  editState.caseDate = ""
+  editState.consultTime = []
+  editState.describeInfo = ""
+  isEditOpen.value = false
+}
+const timeOptions = ref<any>([])
+const getDic = async () => {
+  let _temp = ""
+  if (editState.consultDate && typeof editState.consultDate !== "string") {
+    let day = editState.consultDate.getDate()
+    let mon = editState.consultDate.getMonth() + 1
+    let ye = editState.consultDate.getFullYear()
+    _temp = `${day}/${mon}/${ye}`
+  } else {
+    _temp = editState.consultDate
+  }
+  if (editState.serviceTypeId) {
+    editState.serviceTypeId = parseInt(editState.serviceTypeId)
+  }
+  const res = await $fetch<CustomRes>(
+    `/sys/appointment_record_info/queryAvailablePeriods`,
+    {
+      baseURL: runtimeConfig.public.apiBase,
+      method: "get",
+      query: {
+        serviceTypeId: editState.serviceTypeId,
+        consultDate: _temp,
+      },
+      onRequest({ request, options }) {
+        const headers = options?.headers
+          ? new Headers(options.headers)
+          : new Headers()
+        if (!headers.has("Authorization")) {
+          headers.set("Authorization", store.token)
+        }
+        options.headers = headers
+      },
+    }
+  )
+  if (res.code === 0) {
+    timeOptions.value = res.data
+  } else {
+    if (msg) msg(res.msg, "warning")
+  }
+}
+
+watch(
+  () => editState.consultDate,
+  (val) => {
+    if (editState.consultDate && editState.serviceTypeId) {
+      getDic()
+    }
+  },
+  {
+    deep: true,
+  }
+)
+watch(
+  () => editState.serviceTypeId,
+  (val) => {
+    if (editState.consultDate && editState.serviceTypeId) {
+      getDic()
+    }
+  },
+  {
+    deep: true,
+  }
+)
+watch(
+  () => editState.consultTime,
+  (val) => {
+    if (editState.consultTime?.length == 0) {
+      timeOptions.value.map((k: any) => {
+        k.disabled = false
+      })
+    }
+    if (editState.consultTime?.length == 1) {
+      timeOptions.value.map((k: any) => {
+        if (
+          !editState.consultTime.includes(k.id) &&
+          k.id != editState.consultTime[0] + 1
+        ) {
+          k.disabled = true
+        }
+      })
+    }
+    if (editState.consultTime?.length == 2) {
+      timeOptions.value.map((k: any) => {
+        if (!editState.consultTime.includes(k.id)) {
+          k.disabled = true
+        }
+      })
+    }
+  },
+  {
+    deep: true,
+  }
+)
 onMounted(() => {
   getData()
 })
@@ -287,7 +520,7 @@ onMounted(() => {
                       <div class="text-[#8294BA] text-sm mb-[5px]">
                         預約編號:
                       </div>
-                      <div class="text-md">
+                      <div v-if="detailData" class="text-md">
                         {{ detailData.appointmentCode }}
                       </div>
                     </div>
@@ -295,28 +528,47 @@ onMounted(() => {
                       <div class="text-[#8294BA] text-sm mb-[5px]">
                         預約狀況:
                       </div>
-                      <div class="text-md" v-if="detailData.state === 0">
+                      <div
+                        class="text-md"
+                        v-if="detailData && detailData.state === 0"
+                      >
                         未完成
                       </div>
-                      <div class="text-md" v-else-if="detailData.state === 1">
+                      <div
+                        class="text-md"
+                        v-else-if="detailData && detailData.state === 1"
+                      >
                         已完成
                       </div>
-                      <div class="text-md" v-else-if="detailData.state === 2">
+                      <div
+                        class="text-md"
+                        v-else-if="detailData && detailData.state === 2"
+                      >
                         已取消
                       </div>
                     </div>
                   </div>
                   <div>
                     <div class="text-[#8294BA] text-sm mb-[5px]">下單日期:</div>
-                    <div class="text-md">{{ detailData.createDate }}</div>
+                    <div v-if="detailData" class="text-md">
+                      {{ detailData.createDate }}
+                    </div>
                   </div>
                 </div>
               </div>
               <div>
                 <div
-                  class="bg-[#ECF8E9] w-full px-[20px] py-[10px] rounded-lg font-bold"
+                  class="bg-[#ECF8E9] w-full px-[20px] py-[10px] rounded-lg font-bold flex justify-between items-center"
                 >
-                  諮詢資料
+                  <div>諮詢資料</div>
+                  <div
+                    v-if="detailData.state == 0"
+                    @click="showMod"
+                    class="text-sm flex items-center text-[#6EA860] cursor-pointer"
+                  >
+                    <Icon name="material-symbols:edit"></Icon>
+                    <div class="ml-1">更改</div>
+                  </div>
                 </div>
                 <div class="py-5 px-5 w-[90%] flex justify-between">
                   <div class="mb-5">
@@ -324,7 +576,7 @@ onMounted(() => {
                       <div class="text-[#8294BA] text-sm mb-[5px]">
                         諮詢類型:
                       </div>
-                      <div class="text-md">
+                      <div v-if="detailData" class="text-md">
                         {{ detailData.serviceTypeName }}
                       </div>
                     </div>
@@ -332,19 +584,27 @@ onMounted(() => {
                       <div class="text-[#8294BA] text-sm mb-[5px]">
                         案件日期:
                       </div>
-                      <div class="text-md">{{ detailData.caseDate }}</div>
+                      <div v-if="detailData" class="text-md">
+                        {{ detailData.caseDate }}
+                      </div>
                     </div>
                   </div>
                   <div>
                     <div class="text-[#8294BA] text-sm mb-[5px]">諮詢時間:</div>
-                    <div class="text-md">{{ detailData.consultDate }}</div>
-                    <div class="text-md">{{ detailData.consultTime }}</div>
+                    <div v-if="detailData" class="text-md">
+                      {{ detailData.consultDate }}
+                    </div>
+                    <div v-if="detailData" class="text-md">
+                      {{ detailData.consultTime }}
+                    </div>
                   </div>
                 </div>
                 <div class="px-5 w-[100%]">
                   <div>
                     <div class="text-[#8294BA] text-sm mb-[5px]">事件描述:</div>
-                    <div class="text-md">{{ detailData.describeInfo }}</div>
+                    <div v-if="detailData" class="text-md">
+                      {{ detailData.describeInfo }}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -578,10 +838,105 @@ onMounted(() => {
     </div>
     <div v-if="delisopen" class="mask" @click="hideDialog"></div>
     <div v-if="renameopen" class="mask" @click="hideDialog"></div>
+
+    <div
+      v-if="isEditOpen"
+      style="z-index: 40"
+      class="absolute w-[550px] rounded-xl box-border bg-white 2xl:top-[15%] top-[15%] left-[50%] translate-x-[-50%]"
+    >
+      <UCard
+        :ui="{
+          ring: '',
+          divide: 'divide-y divide-gray-100 dark:divide-gray-800',
+        }"
+      >
+        <div class="flex justify-end">
+          <Icon
+            @click="closeEdit"
+            class="cursor-pointer"
+            name="ic:outline-close"
+          ></Icon>
+        </div>
+        <UForm @submit="onEdit" :state="editState" class="my-5 mb-5">
+          <UFormGroup label="諮詢類型" name="serviceTypeId" required>
+            <USelect
+              size="lg"
+              v-model="editState.serviceTypeId"
+              :options="serviceTypeOptions"
+              option-attribute="name"
+              placeholder="選擇項目"
+            />
+          </UFormGroup>
+          <div class="mt-3">
+            <UFormGroup label="諮詢時間" name="consultDate" required>
+              <VueDatePicker
+                :format="formatDefault"
+                v-model="editState.consultDate"
+                placeholder="選擇日期"
+                :allowed-dates="allowedDates"
+                :enable-time-picker="false"
+                locale="cn"
+                cancel-text="close"
+                select-text="select"
+              ></VueDatePicker>
+            </UFormGroup>
+          </div>
+          <div class="mt-3 flex justify-between">
+            <UFormGroup class="w-[100%]" name="consultTime">
+              <USelectMenu
+                size="lg"
+                multiple
+                v-model="editState.consultTime"
+                :options="timeOptions"
+                value-attribute="id"
+                option-attribute="times"
+                placeholder="選擇時段"
+              >
+                <template #empty> 无数据 </template></USelectMenu
+              >
+            </UFormGroup>
+          </div>
+          <div class="mt-4">
+            <UFormGroup label="案件日期" name="caseDate">
+              <VueDatePicker
+                :format="formatDefault"
+                v-model="editState.caseDate"
+                placeholder="選擇日期"
+                :enable-time-picker="false"
+                locale="cn"
+              ></VueDatePicker>
+            </UFormGroup>
+          </div>
+          <div class="mt-4">
+            <UFormGroup label="事件描述" name="describeInfo">
+              <UTextarea size="lg" v-model="editState.describeInfo" />
+            </UFormGroup>
+          </div>
+          <div class="w-full flex justify-end mt-5">
+            <button
+              type="submit"
+              class="bg-[#DEECDB] w-40 py-2 rounded-full text-md font-semibold flex justify-center items-center cursor-pointer"
+            >
+              確認
+            </button>
+          </div>
+        </UForm>
+      </UCard>
+    </div>
+    <div v-if="isEditOpen" class="mask" @click="isEditOpen = false"></div>
   </div>
 </template>
 
 <style lang="scss" scoped>
+.mask {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba($color: #000000, $alpha: 0.2);
+  z-index: 30;
+}
 .active {
   background-color: #eaeff9;
 }

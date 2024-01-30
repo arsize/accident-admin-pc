@@ -191,17 +191,17 @@ const onRegister = async () => {
                 你的姓稱
               </div>
               <div class="flex justify-between items-center w-[100%] mb-3">
-                <UFormGroup name="firstName" class="w-[49%]" required>
-                  <UInput
-                    class="w-[100%]"
-                    v-model="registerState.firstName"
-                    placeholder="姓"
-                  />
-                </UFormGroup>
-                <UFormGroup class="w-[49%]" name="surname">
+                <UFormGroup name="surname" class="w-[49%]" required>
                   <UInput
                     class="w-[100%]"
                     v-model="registerState.surname"
+                    placeholder="姓"
+                  />
+                </UFormGroup>
+                <UFormGroup class="w-[49%]" name="firstName">
+                  <UInput
+                    class="w-[100%]"
+                    v-model="registerState.firstName"
                     placeholder="名"
                   />
                 </UFormGroup>
