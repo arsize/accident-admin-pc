@@ -57,6 +57,46 @@ const columns = [
   },
 ]
 
+// 修改密碼
+const repwdopen = ref(false)
+const rePwdState = ref({
+  orgpwd: "",
+  newpwd: "",
+  checkpwd: "",
+})
+const rePaswd = () => {
+  repwdopen.value = true
+}
+const onRePwd = async () => {
+  if (rePwdState.value.checkpwd !== rePwdState.value.newpwd) {
+    if (msg) msg("兩次密碼不一致", "warning")
+    return
+  }
+  const res = await $fetch<CustomRes>(`/sys/user/password`, {
+    baseURL: runtimeConfig.public.apiBase,
+    method: "put",
+    body: {
+      password: rePwdState.value.orgpwd,
+      newPassword: rePwdState.value.newpwd,
+    },
+    onRequest({ request, options }) {
+      const headers = options?.headers
+        ? new Headers(options.headers)
+        : new Headers()
+      if (!headers.has("Authorization")) {
+        headers.set("Authorization", store.token)
+      }
+      options.headers = headers
+    },
+  })
+  if (res.code === 0) {
+    if (msg) msg("修改成功", "success")
+    repwdopen.value = false
+  } else {
+    if (msg) msg(res.msg, "warning")
+  }
+}
+
 // 删除账户
 const delisopen = ref(false)
 const renameopen = ref(false)
@@ -214,6 +254,7 @@ const goback = () => {
 }
 const hideDialog = () => {
   delisopen.value = false
+  repwdopen.value = false
   renameopen.value = false
 }
 const printPage = () => {
@@ -757,6 +798,12 @@ onMounted(() => {
             class="w-full text-center flex items-center justify-center mt-10"
           >
             <div
+              @click="rePaswd"
+              class="py-2 text-sm px-3 border rounded-lg cursor-pointer mr-5"
+            >
+              修改密碼
+            </div>
+            <div
               @click="rename"
               class="py-2 text-sm px-3 border rounded-lg cursor-pointer mr-5"
             >
@@ -805,7 +852,7 @@ onMounted(() => {
           <UFormGroup class="2xl:mb-5 mb-3">
             <template #label>
               <div class="text-gray-500 font-normal mb-2 inline-block">
-                你的姓名
+                姓氏 名字
               </div>
             </template>
             <div class="flex items-center justify-between">
@@ -850,8 +897,66 @@ onMounted(() => {
         </UButton>
       </div>
     </div>
+    <div
+      v-if="repwdopen"
+      class="absolute z-40 2xl:w-[500px] w-[400px] rounded-xl top-[40%] left-[50%] translate-x-[-50%] translate-y-[-50%] bg-white p-5 px-10 box-border"
+    >
+      <div class="text-xl mb-5">更改密碼</div>
+      <div class="font-normal">
+        <UForm :state="renameState" class="my-3">
+          <UFormGroup required name="orgpwd" class="2xl:mb-5 mb-3">
+            <template #label>
+              <div class="text-gray-500 font-normal mb-2 inline-block">
+                舊密碼
+              </div>
+            </template>
+            <UInput
+              class="w-[100%]"
+              type="password"
+              placeholder="請輸入舊密碼"
+              v-model="rePwdState.orgpwd"
+            />
+          </UFormGroup>
+          <UFormGroup required name="newpwd" class="2xl:mb-5 mb-3">
+            <template #label>
+              <div class="text-gray-500 font-normal mb-2 inline-block">
+                新密碼
+              </div>
+            </template>
+            <UInput
+              type="password"
+              placeholder="請輸入新密碼"
+              v-model="rePwdState.newpwd"
+            />
+          </UFormGroup>
+
+          <UFormGroup required name="checkpwd">
+            <template #label>
+              <div class="text-gray-500 font-normal mb-2 inline-block">
+                確認密碼
+              </div>
+            </template>
+            <UInput
+              type="password"
+              placeholder="請確認新密碼"
+              v-model="rePwdState.checkpwd"
+            />
+          </UFormGroup>
+        </UForm>
+      </div>
+      <div class="w-[100%] mx-auto flex justify-between mt-5">
+        <div></div>
+        <UButton
+          @click="onRePwd"
+          class="py-2 px-10 cursor-pointer flex justify-center items-center rounded-full"
+        >
+          確認
+        </UButton>
+      </div>
+    </div>
     <div v-if="delisopen" class="mask" @click="hideDialog"></div>
     <div v-if="renameopen" class="mask" @click="hideDialog"></div>
+    <div v-if="repwdopen" class="mask" @click="hideDialog"></div>
 
     <div
       v-if="isEditOpen"

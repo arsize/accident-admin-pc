@@ -367,7 +367,7 @@ onMounted(() => {
               <div class="w-[48%]">
                 <div class="flex justify-between w-full">
                   <UFormGroup
-                    label="你的姓名"
+                    label="姓氏 名字"
                     class="w-[49%]"
                     name="firstName"
                     required
@@ -468,7 +468,7 @@ onMounted(() => {
                 type="submit"
                 class="bg-[#DEECDB] w-40 py-2 rounded-full text-md font-semibold flex justify-center items-center cursor-pointer"
               >
-                确定预约
+                確定預約
               </button>
             </div>
           </UForm>

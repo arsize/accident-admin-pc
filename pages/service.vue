@@ -105,7 +105,7 @@ onMounted(() => {
           </div>
         </div>
         <div class="w-full pl-5">
-          <div class="text-xl mb-10 text-custom-blue">相關法律知识</div>
+          <div class="text-xl mb-10 text-custom-blue">相關法律知識</div>
           <NuxtLink
             :to="`/legal/${item.id}`"
             class="atc-item w-full mb-5"
