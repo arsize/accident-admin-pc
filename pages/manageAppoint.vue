@@ -557,19 +557,19 @@ onMounted(() => {
               <div class="text-xl mb-5">客戶資料</div>
               <div class="mb-5">
                 <div class="text-[#8294BA] text-sm mb-[5px]">姓氏:</div>
-                <div class="text-md">{{ store.userInfo?.surname }}</div>
+                <div class="text-md">{{ detailData?.surname }}</div>
               </div>
               <div class="mb-5">
                 <div class="text-[#8294BA] text-sm mb-[5px]">名字:</div>
-                <div class="text-md">{{ store.userInfo?.firstName }}</div>
+                <div class="text-md">{{ detailData?.firstName }}</div>
               </div>
               <div class="mb-5">
                 <div class="text-[#8294BA] text-sm mb-[5px]">電郵地址:</div>
-                <div class="text-md">{{ store.userInfo?.email }}</div>
+                <div class="text-md">{{ detailData?.email }}</div>
               </div>
               <div>
                 <div class="text-[#8294BA] text-sm mb-[5px]">聯絡電話:</div>
-                <div class="text-md">{{ store.userInfo?.mobile }}</div>
+                <div class="text-md">{{ detailData?.telephone }}</div>
               </div>
             </div>
             <div class="w-[65%]">
@@ -1026,7 +1026,7 @@ onMounted(() => {
                 option-attribute="times"
                 placeholder="選擇時段"
               >
-                <template #empty> 无数据 </template></USelectMenu
+                <template #empty> 無數據 </template></USelectMenu
               >
             </UFormGroup>
           </div>

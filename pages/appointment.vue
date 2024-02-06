@@ -431,7 +431,7 @@ onMounted(() => {
                       option-attribute="times"
                       placeholder="選擇時段"
                     >
-                      <template #empty> 无数据 </template></USelectMenu
+                      <template #empty> 無數據 </template></USelectMenu
                     >
                   </UFormGroup>
                 </div>
