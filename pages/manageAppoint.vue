@@ -357,6 +357,12 @@ const onEdit = async () => {
     }
   }
 
+  if (editState.value.caseDate) {
+    editState.value.caseDate = `${editState.value.caseDate.getDate()}/${
+      editState.value.caseDate.getMonth() + 1
+    }/${editState.value.caseDate.getFullYear()}`
+  }
+
   let json = {
     id: editState.value.id,
     serviceTypeId: editState.value.serviceTypeId,
