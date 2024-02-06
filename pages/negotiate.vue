@@ -36,25 +36,52 @@ useHead({
     </div>
 
     <div>
+      <div class="my-2 font-medium">Account Registration</div>
+      <div>
+        2.1. When registering an account, you are obligated to (1) register true
+        and accurate information, and (2) make appropriate corrections by
+        yourself to keep that registered information up to date.
+      </div>
+      <div>
+        2.2. Any User who has registered an account may delete such User’s
+        account at any time.
+      </div>
+      <div>
+        2.3. Any and all rights of a User to use the services for which the
+        registration of an account is required shall cease to exist when such
+        User’s account has been deleted for any reason. Please take note that an
+        account cannot be retrieved even if a User has accidentally deleted
+        his/her account.
+      </div>
+      <div>
+        2.4. An account is for exclusive use and belongs solely to the User of
+        such account. Users may not transfer, lease or otherwise dispose their
+        rights to use the services for which the registration of an account is
+        required to any third party, nor may the same be inherited or succeeded
+        to by any third party.
+      </div>
+    </div>
+
+    <div>
       <div class="my-2 font-medium">User Obligations</div>
       <div>
-        2.1 By using our services, you represent and warrant that you are at
+        3.1 By using our services, you represent and warrant that you are at
         least 18 years old and have the legal capacity to enter into this
         Agreement.
       </div>
       <div>
-        2.2 You agree to provide accurate and up-to-date information during the
+        3.2 You agree to provide accurate and up-to-date information during the
         registration process and to maintain the confidentiality of your account
         credentials.
       </div>
       <div>
-        2.3 You are solely responsible for any content you submit or display on
+        3.3 You are solely responsible for any content you submit or display on
         Tin Bok (HK)'s platform, and you agree not to upload or transmit any
         content that is unlawful, harmful, defamatory, obscene, or otherwise
         objectionable.
       </div>
       <div>
-        2.4 You acknowledge that Tin Bok (HK) reserves the right to terminate or
+        3.4 You acknowledge that Tin Bok (HK) reserves the right to terminate or
         suspend your account at any time for any violation of this Agreement or
         any applicable laws.
       </div>
@@ -63,13 +90,13 @@ useHead({
     <div>
       <div class="my-2 font-medium">Intellectual Property</div>
       <div>
-        3.1 All intellectual property rights, including but not limited to
+        4.1 All intellectual property rights, including but not limited to
         trademarks, logos, and copyrighted materials, displayed on the Tin Bok
         (HK) website or provided as part of the services, are the property of
         Tin Bok (HK) or its licensors.
       </div>
       <div>
-        3.2 You may not use, reproduce, modify, or distribute any of the
+        4.2 You may not use, reproduce, modify, or distribute any of the
         intellectual property without prior written permission from Tin Bok
         (HK).
       </div>
@@ -78,18 +105,18 @@ useHead({
     <div>
       <div class="my-2 font-medium">Limitation of Liability</div>
       <div>
-        4.1 Tin Bok (HK) will make reasonable efforts to ensure the accuracy and
+        5.1 Tin Bok (HK) will make reasonable efforts to ensure the accuracy and
         reliability of the information and services provided. However, we do not
         guarantee the completeness, reliability, or suitability of the services
         for any purpose.
       </div>
       <div>
-        4.2 Tin Bok (HK) shall not be held liable for any direct, indirect,
+        5.2 Tin Bok (HK) shall not be held liable for any direct, indirect,
         incidental, consequential, or punitive damages arising out of or in
         connection with your use of the services or any information provided.
       </div>
       <div>
-        4.3 Tin Bok (HK) shall not be responsible for any actions or omissions
+        5.3 Tin Bok (HK) shall not be responsible for any actions or omissions
         of the agents or any third parties involved in the provision of
         services.
       </div>
@@ -98,7 +125,7 @@ useHead({
     <div>
       <div class="my-2 font-medium">Indemnification</div>
       <div>
-        5.1 You agree to indemnify, defend, and hold harmless Tin Bok (HK) and
+        6.1 You agree to indemnify, defend, and hold harmless Tin Bok (HK) and
         its directors, officers, employees, and agents from and against any
         claims, liabilities, damages, losses, and expenses arising out of or in
         connection with your use of the services or any violation of this
@@ -109,11 +136,11 @@ useHead({
     <div>
       <div class="my-2 font-medium">Modification and Termination</div>
       <div>
-        6.1 Tin Bok (HK) reserves the right to modify or terminate the services
+        7.1 Tin Bok (HK) reserves the right to modify or terminate the services
         provided at any time, with or without notice.
       </div>
       <div>
-        6.2 Tin Bok (HK) may also modify this Agreement from time to time, and
+        7.2 Tin Bok (HK) may also modify this Agreement from time to time, and
         any changes will be effective upon posting on the Tin Bok (HK) website.
         Your continued use of the services following the posting of any changes
         constitutes your acceptance of those changes.
@@ -123,11 +150,11 @@ useHead({
     <div>
       <div class="my-2 font-medium">Governing Law and Jurisdiction</div>
       <div>
-        7.1 This Agreement shall be governed by and construed in accordance with
+        8.1 This Agreement shall be governed by and construed in accordance with
         the laws of the jurisdiction in which Tin Bok (HK) is located.
       </div>
       <div>
-        7.2 Any disputes arising out of or in connection with this Agreement
+        8.2 Any disputes arising out of or in connection with this Agreement
         shall be submitted to the exclusive jurisdiction of the courts in the
         jurisdiction where Tin Bok (HK) is located.
       </div>
