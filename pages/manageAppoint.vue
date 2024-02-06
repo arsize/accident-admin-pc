@@ -357,10 +357,23 @@ const onEdit = async () => {
     }
   }
 
-  if (editState.value.caseDate) {
+  if (
+    editState.value.caseDate &&
+    typeof editState.value.caseDate !== "string"
+  ) {
     editState.value.caseDate = `${editState.value.caseDate.getDate()}/${
       editState.value.caseDate.getMonth() + 1
     }/${editState.value.caseDate.getFullYear()}`
+  }
+
+  if (
+    editState.value.consultDate &&
+    typeof editState.value.consultDate !== "string"
+  ) {
+    let day = editState.value.consultDate.getDate()
+    let mon = editState.value.consultDate.getMonth() + 1
+    let ye = editState.value.consultDate.getFullYear()
+    editState.value.consultDate = `${day}/${mon}/${ye}`
   }
 
   let json = {
@@ -393,7 +406,8 @@ const onEdit = async () => {
       detailData.value.consultDate = editState.value.consultDate
       detailData.value.caseDate = editState.value.caseDate
       detailData.value.describeInfo = editState.value.describeInfo
-      detailData.value.consultTime = editState.value.consultTime
+      console.log("xxxxxxxx", editState.value.consultTime)
+      detailData.value.consultTime = json.consultTime
       msg("修改成功", "success")
       closeEdit()
     }
