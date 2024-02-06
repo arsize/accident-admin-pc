@@ -556,8 +556,12 @@ onMounted(() => {
             <div class="w-[30%] h-1/2 flex flex-col bg-[#F7F7F7] p-5 py-10">
               <div class="text-xl mb-5">客戶資料</div>
               <div class="mb-5">
-                <div class="text-[#8294BA] text-sm mb-[5px]">姓名:</div>
-                <div class="text-md">{{ store.userInfo?.realName }}</div>
+                <div class="text-[#8294BA] text-sm mb-[5px]">姓氏:</div>
+                <div class="text-md">{{ store.userInfo?.surname }}</div>
+              </div>
+              <div class="mb-5">
+                <div class="text-[#8294BA] text-sm mb-[5px]">名字:</div>
+                <div class="text-md">{{ store.userInfo?.firstName }}</div>
               </div>
               <div class="mb-5">
                 <div class="text-[#8294BA] text-sm mb-[5px]">電郵地址:</div>
@@ -788,11 +792,11 @@ onMounted(() => {
         <div class="w-[50%] flex flex-col bg-[#F7F7F7] p-5 py-10">
           <div class="text-xl mb-5">客戶資料</div>
           <div class="mb-5">
-            <div class="text-[#8294BA] text-sm mb-[5px]">姓:</div>
+            <div class="text-[#8294BA] text-sm mb-[5px]">姓氏:</div>
             <div class="text-md">{{ store.userInfo?.surname }}</div>
           </div>
           <div class="mb-5">
-            <div class="text-[#8294BA] text-sm mb-[5px]">名:</div>
+            <div class="text-[#8294BA] text-sm mb-[5px]">名字:</div>
             <div class="text-md">{{ store.userInfo?.firstName }}</div>
           </div>
           <div class="mb-5">
@@ -868,12 +872,12 @@ onMounted(() => {
             <div class="flex items-center justify-between">
               <UInput
                 class="w-[49%]"
-                placeholder="姓"
+                placeholder="姓氏"
                 v-model="renameState.firstName"
               />
               <UInput
                 class="w-[49%]"
-                placeholder="名"
+                placeholder="名字"
                 v-model="renameState.surname"
               />
             </div>
